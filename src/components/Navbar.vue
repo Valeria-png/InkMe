@@ -21,7 +21,7 @@
                 <div class="dropdown-content text-white p-2 font-inter bg-navy rounded-xl">
                     <p>Mis Diseños</p>
                     <p>Mis Pedidos</p>
-                    <p>Cerrar sesión</p>
+                    <p @click="router.push('/login')">Iniciar sesión</p>
                 </div>
             </div>
 

@@ -11,6 +11,7 @@
 
 <script setup>
 import CartItem from '@/components/CartItem.vue';
+import Navbar from '@/components/Navbar.vue';
 import { ref } from 'vue';
 
 const cartItems = ref([

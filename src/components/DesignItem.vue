@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-5">
         <div class="col-span-2 p-1">
-            <img class="rounded-xl" src="https://i.pinimg.com/736x/68/65/c6/6865c632754be7721ad89bfed233c182.jpg" alt="">
+            <img class="rounded-xl" :src="props.img" alt="">
         </div>
         <span class="ms-4 col-span-3 flex flex-col justify-between">
             <div>
@@ -17,3 +17,11 @@
         </span>
     </div>
 </template>
+
+<script setup>
+    import { defineProps } from 'vue';
+
+    const props = defineProps({
+        img: String
+    })
+</script>
