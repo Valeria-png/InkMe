@@ -38,7 +38,6 @@
                         <p class="text-navy font-inter text-wrap">Descripción descripción lorem ipsum dolor</p>
                         <button class="bg-neon-pink w-full rounded-xl text-xl place-self-center p-2 text-white text-semibold font-inter hover:scale-105 transition hover:bg-dark-pink">Comprar Ahora</button>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -51,42 +50,40 @@
     const levels = [
         { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
         { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
-        { label: "Mayoreo 2 201+ pzas.", min: 201, max: Infinity }
+        { label: "Mayoreo 2 201+ pzas.", min: 201, max: 499 }
     ];
 
     const selectedLevel = ref(levels[0]);
     const quantity = ref(selectedLevel.value.min);
 
- 
-
     watch(selectedLevel, (newLevel) => {
         quantity.value = newLevel.min;
     })
 
-    function updateLevel() {
-        selectedLevel = levels.find((level) => 
-        level.min === quantity.value || 
-        level.max === quantity.value || 
-        (quantity.value > level.min && quantity.value <= level.max)
-    ) || levels[levels.length - 1]; // Default to last level if out of range
-    };
-// const newLevel= levels.find((level) => level.min <= quantity.value && level.max >= quantity.value) || levels.find((level)=> level.min === quantity.value) || levels.find((level) => level.max === quantity.value);
-        // selectedLevel.value = newLevel;
-        // console.log(newLevel);
     function incrementQuantity (){
         quantity.value++;
-        updateLevel();
+        if (quantity.value >= 1 && quantity.value <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (quantity.value >= 51 && quantity.value <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (quantity.value >= 201) {
+            selectedLevel.value = levels[2];
+        }
     }
     function decrementQuantity(){
-        if (quantity.value === 1) {
-            quantity.value = 1
-            updateLevel();
+        if(quantity.value === 1) return
+        quantity.value--;
+        val = quantity.value
+        if (quantity.value >= 1 && quantity.value <= 50) {
+            selectedLevel.value = levels[0];
+            quantity.value = val
+        } else if (quantity.value >= 51 && quantity.value <= 200) {
+            selectedLevel.value = levels[1];
+            quantity.value = val
+        } else if (quantity.value >= 201) {
+            selectedLevel.value = levels[2];
+            quantity.value = val
         }
-        else{
-         quantity.value--;   
-        }
-        
-        
     }
     console.log(quantity.value);
 
