@@ -8,5 +8,8 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style scoped>
+<<<<<<< HEAD
 
+=======
+>>>>>>> front-guillermo
 </style>
