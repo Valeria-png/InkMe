@@ -45,13 +45,13 @@ const quantityValidation = () => {
 
 const calculateLevel = () => {
     if (props.item.quantity < 51) {
-        props.item.level = 'nivel menudeo';
+        props.item.level = 'Nivel menudeo';
     }
     else if (props.item.quantity < 201) {
-        props.item.level = 'nivel mayoreo 1';
+        props.item.level = 'Nivel mayoreo 1';
     }
     else {
-        props.item.level = 'nivel mayoreo 2';
+        props.item.level = 'Nivel mayoreo 2';
     }
 }
 
