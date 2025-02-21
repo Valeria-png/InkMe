@@ -1,16 +1,19 @@
 <template>
-    <div class="w-50 rounded-lg overflow-hidden shadow-md bg-white">
-      <div class="h-32 bg-gray-300 flex items-center justify-center relative">
+    <div class="w-65 rounded-xl overflow-hidden shadow-md bg-white">
+      <div class="h-57 bg-gray-300 flex items-center justify-center relative">
+        <img src="https://i.pinimg.com/736x/94/7d/d4/947dd49259f757d71e23c0fef0c8cb6e.jpg" alt="" class="w-full h-full object-cover">
         <button class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l1 4m0 0h13l1-4M6 7v10a2 2 0 002 2h8a2 2 0 002-2V7m-9 0v10m4-10v10m-2-10v10"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus hover:text-navy" viewBox="0 0 16 16">
+            <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
+            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
           </svg>
+
         </button>
       </div>
-      <div class="bg-[#FCDEE4] p-5">
-        <p class="text-[#FF204E] font-bold text-lg">$000.00</p>
-        <h3 class="text-[#A0153E] font-semibold text-lg">Nombre Artículo</h3>
-        <p class="text-[#FF204E] text-sm">Nombre Creador</p>
+      <div class="bg-[#FCDEE4] h-32 px-5 py-3">
+        <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">$000.00</p>
+        <h3 class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg">Nombre Artículo</h3>
+        <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">Categoría o Nombre Creador</p>
       </div>
     </div>
   </template>

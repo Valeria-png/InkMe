@@ -13,12 +13,18 @@
         <div class="text-left md:text-right md:ml-auto">
           <h4 class="font-bold text-xl">Adquiere productos</h4>
           <ul class="text-navy text-base md:text-lg">
-            <li>Catálogo</li>
-            <li>Diseños de la comunidad</li>
+            <li @click="router.push('/catalogo')" class="cursor-pointer hover:underline">Catálogo</li>
+            <li @click="router.push('/disenos-comunidad')" class="cursor-pointer hover:underline">Diseños de la comunidad</li>
             <li>Todos los artículos</li>
           </ul>
         </div>
       </div>
     </footer>
   </template>
+
+  <script setup>
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+  </script>
   

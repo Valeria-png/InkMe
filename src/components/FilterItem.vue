@@ -1,8 +1,9 @@
 <template>
     <div v-for="category in categories" :key="category.id">
         <div class="flex items-center p-4 gap-4">
-            <img class="rounded-2xl w-1/4 h-1/4" src="https://i.pinimg.com/736x/68/65/c6/6865c632754be7721ad89bfed233c182.jpg" alt="">
+            <input type="checkbox" name="" id="" class="w-4 h-4 rounded-xl">
             <h1 class="font-inter text-[18px] text-white">{{ category.name }}</h1>
+
         </div>
     </div>
 </template>

@@ -18,6 +18,6 @@ const imgs = [
     </div>
     <div class="grid md:grid-cols-2 sm:grid-cols-1 lg:gap-20 md:gap-8 sm:gap-12 p-10">
         <DesignItem v-for="img in imgs" :key="img" :img="img"></DesignItem>
-
+        
     </div>
 </template>

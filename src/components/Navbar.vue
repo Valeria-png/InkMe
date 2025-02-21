@@ -6,7 +6,7 @@
                 <h3 class="font-inter" @click="router.push('/catalogo')">Catálogo</h3>
             </button>
             <button>
-                <h3 class="font-inter">Diseños de Comunidad</h3>
+                <h3 class="font-inter" @click="router.push('/disenos-comunidad')">Diseños de Comunidad</h3>
             </button>
             <div class="w-1/4 md:w-[36%] hidden md:flex bg-navy rounded-xl p-2 text-white h-1/2 lg:w-1/3 justify-between">
                 <input type="text" class="outline-none w-full" placeholder="Buscar diseños y artículos">
@@ -19,7 +19,7 @@
             <div class="relative dropdown">
                 <h3 class="font-inter">Usuario</h3>
                 <div class="dropdown-content text-white p-2 font-inter bg-navy rounded-xl">
-                    <p>Mis Diseños</p>
+                    <p @click="router.push('/mis-disenos')">Mis Diseños</p>
                     <p>Mis Pedidos</p>
                     <p @click="router.push('/login')">Iniciar sesión</p>
                 </div>
