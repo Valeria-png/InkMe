@@ -6,6 +6,8 @@ import Cart from '@/views/Cart.vue'
 import Login from '@/components/Login.vue'
 import ArticuloCard from '@/components/ArticuloCard.vue'
 import CategoryItem from '@/components/CategoryItem.vue'
+import Home from '@/views/Home.vue'
+import Catalog from '@/views/Catalog.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +15,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Navbar,
+      component: Home,
+    },
+    {
+      path: '/catalogo',
+      name: 'catalogo',
+      component: Catalog,
     },
     {
       path: '/designs',

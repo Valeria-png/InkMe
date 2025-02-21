@@ -1,9 +1,9 @@
 <template>
-    <div class="flex w-screen place-items-center px-4 lg:py-0 py-4  lg:px-12 justify-between">
+    <div class="flex w-full place-items-center px-4 py-3  lg:px-12 justify-between">
         <img src="/public/inkme logo.png" alt="" class="lg:w-36 w-20  hover:cursor-pointer hover:scale-105 transition mr-4 lg:mr-0 " @click="router.push('/')">
         <div class="flex w-full place-items-center justify-center gap-6  lg:gap-12">
             <button>
-                <h3 class="font-inter">Catálogo</h3>
+                <h3 class="font-inter" @click="router.push('/catalogo')">Catálogo</h3>
             </button>
             <button>
                 <h3 class="font-inter">Diseños de Comunidad</h3>
