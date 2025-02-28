@@ -10,7 +10,7 @@
             <button type="" class="bg-navy text-white py-2 px-4 rounded-lg font-inter">Ordenar por</button>
         </div>
         <section class="flex flex-wrap gap-10 py-4 justify-center">
-            <ArticuloCard v-for="i in 8" :key="i"></ArticuloCard>  
+            <ProductCard v-for="i in 8" :key="i"></ProductCard>  
         </section>
 
         
@@ -23,6 +23,7 @@ import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import CategoryItem from '@/components/CategoryItem.vue';
 import ArticuloCard from '@/components/ArticuloCard.vue';
+import ProductCard from '@/components/ProductCard.vue';
 
 </script>
 

@@ -89,12 +89,7 @@
         <h2 class="text-navy font-inter text-2xl font-semibold">También te puede gustar</h2>
         <hr>
         <div class="flex gap-6 flex-nowrap overflow-auto w-full">
-            <ArticuloCard/>
-            <ArticuloCard/>
-            <ArticuloCard/>
-            <ArticuloCard/> 
-            <ArticuloCard/>
-            <ArticuloCard/>
+            <ProductCard v-for="i in 8" :key="i"></ProductCard>
         </div>
     </section>
     <Footer></Footer>
@@ -103,7 +98,7 @@
 <script setup>
 import Navbar from '../components/Navbar.vue';
 import Footer from '../components/Footer.vue';
-import ArticuloCard from '../components/ArticuloCard.vue';
+import ProductCard from '@/components/ProductCard.vue';
 import DesignItem from '@/components/DesignItem.vue';
 import { ref,watch } from 'vue';
 
