@@ -57,35 +57,72 @@
     const quantity = ref(selectedLevel.value.min);
 
     watch(selectedLevel, (newLevel) => {
-        quantity.value = newLevel.min;
+        if (quantity.value === newLevel.max) {
+            quantity.value = newLevel.max;
+        }
+        else{
+            quantity.value = newLevel.min
+        }
+    })
+
+      watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+        //hasta aqui está bien
     })
 
     function incrementQuantity (){
         quantity.value++;
-        if (quantity.value >= 1 && quantity.value <= 50) {
-            selectedLevel.value = levels[0];
-        } else if (quantity.value >= 51 && quantity.value <= 200) {
-            selectedLevel.value = levels[1];
-        } else if (quantity.value >= 201) {
-            selectedLevel.value = levels[2];
-        }
+
     }
     function decrementQuantity(){
         if(quantity.value === 1) return
         quantity.value--;
-        val = quantity.value
-        if (quantity.value >= 1 && quantity.value <= 50) {
-            selectedLevel.value = levels[0];
-            quantity.value = val
-        } else if (quantity.value >= 51 && quantity.value <= 200) {
-            selectedLevel.value = levels[1];
-            quantity.value = val
-        } else if (quantity.value >= 201) {
-            selectedLevel.value = levels[2];
-            quantity.value = val
-        }
     }
-    console.log(quantity.value);
+
+
+    watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+    })
+
+    // function incrementQuantity (){
+    //     quantity.value++;
+    //     if (quantity.value >= 1 && quantity.value <= 50) {
+    //         selectedLevel.value = levels[0];
+    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
+    //         selectedLevel.value = levels[1];
+    //     } else if (quantity.value >= 201) {
+    //         selectedLevel.value = levels[2];
+
+    //     }
+    // }
+    // function decrementQuantity(){
+    //     if(quantity.value === 1) return
+    //     quantity.value--;
+    //     val = quantity.value
+    //     if (quantity.value >= 1 && quantity.value <= 50) {
+    //         selectedLevel.value = levels[0];
+    //         quantity.value = val
+    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
+    //         selectedLevel.value = levels[1];
+    //         quantity.value = val
+    //     } else if (quantity.value >= 201) {
+    //         selectedLevel.value = levels[2];
+    //         quantity.value = val
+    //     }
+    // }
+    // console.log(quantity.value);
 
 </script>
 

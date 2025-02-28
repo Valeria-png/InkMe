@@ -108,45 +108,56 @@ import DesignItem from '@/components/DesignItem.vue';
 import { ref,watch } from 'vue';
 
 const tabIsActive = ref(true)
-
 const levels = [
-    { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
-    { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
-    { label: "Mayoreo 2 201+ pzas.", min: 201, max: 499 }
-];
+        { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
+        { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
+        { label: "Mayoreo 2 201+ pzas.", min: 201, max: 499 }
+    ];
 
-const selectedLevel = ref(levels[0]);
-const quantity = ref(selectedLevel.value.min);
+    const selectedLevel = ref(levels[0]);
+    const quantity = ref(selectedLevel.value.min);
 
-watch(selectedLevel, (newLevel) => {
-    quantity.value = newLevel.min;
-})
+    watch(selectedLevel, (newLevel) => {
+        if (quantity.value === newLevel.max) {
+            quantity.value = newLevel.max;
+        }
+        else{
+            quantity.value = newLevel.min
+        }
+    })
 
-function incrementQuantity (){
-    quantity.value++;
-    if (quantity.value >= 1 && quantity.value <= 50) {
-        selectedLevel.value = levels[0];
-    } else if (quantity.value >= 51 && quantity.value <= 200) {
-        selectedLevel.value = levels[1];
-    } else if (quantity.value >= 201) {
-        selectedLevel.value = levels[2];
+      watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+        //hasta aqui está bien
+    })
+
+    function incrementQuantity (){
+        quantity.value++;
+
     }
-}
-function decrementQuantity(){
-    if(quantity.value === 1) return
-    quantity.value--;
-    val = quantity.value
-    if (quantity.value >= 1 && quantity.value <= 50) {
-        selectedLevel.value = levels[0];
-        quantity.value = val
-    } else if (quantity.value >= 51 && quantity.value <= 200) {
-        selectedLevel.value = levels[1];
-        quantity.value = val
-    } else if (quantity.value >= 201) {
-        selectedLevel.value = levels[2];
-        quantity.value = val
+    function decrementQuantity(){
+        if(quantity.value === 1) return
+        quantity.value--;
     }
-}
+
+
+    watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+    })
+
+
 </script>
 
 <style scoped>
