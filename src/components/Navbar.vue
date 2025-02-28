@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-full place-items-center px-4 py-3  lg:px-12 justify-between">
+    <nav class="flex w-full place-items-center px-4 py-3  lg:px-12 justify-between">
         <img src="/public/inkme logo.png" alt="" class="lg:w-36 w-20  hover:cursor-pointer hover:scale-105 transition mr-4 lg:mr-0 " @click="router.push('/')">
         <div class="flex w-full place-items-center justify-center gap-6  lg:gap-12">
             <button>
@@ -32,7 +32,7 @@
             </button>
         </div>
 
-    </div>
+    </nav>
     <div :class="{'bg-navy':true , 'flex':true ,  'p-3':true, 'rounded-b-xl': true, 'hidden':!isMobileSearchActive, 'md:hidden':true, 'transition':true , 'duration-300':true , 'ease-in-out':true}">
         <input type="text" class="outline-none w-full text-white" placeholder="Buscar diseños y artículos">
         <button class="text-white">

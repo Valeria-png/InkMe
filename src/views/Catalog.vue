@@ -2,7 +2,7 @@
     <Navbar></Navbar>
     <div class="px-10 py-4">
         <h1 class="font-inter text-3xl text-navy font-semibold">Explora las Categorías</h1>
-        <section class="flex flex-wrap gap-4 py-4">
+        <section class="flex flex-wrap justify-center gap-4 py-4">
             <CategoryItem v-for="i in 8" :key="i"></CategoryItem>
         </section>
         <div class="flex justify-between">
