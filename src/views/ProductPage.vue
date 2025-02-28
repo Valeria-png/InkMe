@@ -98,7 +98,7 @@
 <script setup>
 import Navbar from '../components/Navbar.vue';
 import Footer from '../components/Footer.vue';
-import ProductCard from '@/components/ProductCard.vue';
+import ProductCard from '@/components/BaseProductCard.vue';
 import DesignItem from '@/components/DesignItem.vue';
 import { ref,watch } from 'vue';
 
