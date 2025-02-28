@@ -6,8 +6,9 @@ import CategoryItem from '@/components/CategoryItem.vue'
 import Home from '@/views/Home.vue'
 import Catalog from '@/views/Catalog.vue'
 import CommunityDesigns from '@/views/CommunityDesigns.vue'
-import SubirDiseño from '@/views/SubirDiseño.vue'
-import ProductPage from '@/views/ProductPage.vue'
+import OrderView from '@/views/OrderView.vue'
+import ProductView from '@/views/ProductView.vue'
+import ProdcutStatus from '@/views/ProductStatusView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,14 +49,19 @@ const router = createRouter({
       component: CommunityDesigns,
     },
     {
-      path: '/subir-diseno',
-      name: 'subir-diseno',
-      component: SubirDiseño,
+      path : '/product',
+      name : 'product',
+      component : ProductView
     },
     {
-      path: '/product',
-      name: 'product',
-      component: ProductPage,
+      path : '/order',
+      name : 'order',
+      component : OrderView
+    },
+    {
+      path : '/product-status',
+      name : 'product-status',
+      component : ProdcutStatus
     }
 
   ],
