@@ -1,11 +1,11 @@
 <template>
     <Navbar></Navbar>
     <div class="grid sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 py-12">
-        <!-- <ProductCard 
+        <OrderStatusCard 
             v-for="item in ProductCards" 
             :key="item.id" 
             :item="item"
-        /> -->
+        />
     </div>
     <Footer></Footer>
   </template>
@@ -14,6 +14,7 @@
 
   import Navbar from '@/components/Navbar.vue';
   import Footer from '@/components/Footer.vue';
+  import OrderStatusCard from '@/components/OrderStatusCard.vue';
   import { ref } from 'vue';
   
   const ProductCards = ref([

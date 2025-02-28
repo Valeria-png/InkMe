@@ -21,7 +21,7 @@
                 <div class="dropdown-content text-white p-2 font-inter bg-navy rounded-xl">
                     <p @click="router.push('/subir-diseno')">Subir Diseño</p>
                     <p @click="router.push('/mis-disenos')">Mis Diseños</p>
-                    <p>Mis Pedidos</p>
+                    <p @click="router.push('/mis-pedidos')">Mis Pedidos</p>
                     <p @click="router.push('/login')">Iniciar sesión</p>
                 </div>
             </div>
