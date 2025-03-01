@@ -17,13 +17,13 @@
       </div>
     </div>
     <div v-if="isSelected" class="relative">
-      <PopupDiseñoComunidad @close-popup="isSelected = false" class="fixed inset-0"></PopupDiseñoComunidad>
+      <PopupCommunityDesign @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
     </div>
   </template>
 
   <script setup>
   import { ref } from 'vue';
-  import PopupDiseñoComunidad from './PopupDiseñoComunidad.vue';
+import PopupCommunityDesign from './PopupCommunityDesign.vue';
   const isSelected = ref(false)
 
   </script>

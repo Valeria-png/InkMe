@@ -21,7 +21,7 @@
 import { ref } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
-import ArticuloCard from '@/components/ArticuloCard.vue';
+import ArticuloCard from '@/components/ProductWithDesignCard.vue';
 import FilterItem from '@/components/FilterItem.vue';
 
 </script>

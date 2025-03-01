@@ -22,7 +22,6 @@
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import CategoryItem from '@/components/CategoryItem.vue';
-import ArticuloCard from '@/components/ArticuloCard.vue';
 import ProductCard from '@/components/BaseProductCard.vue';
 
 </script>
