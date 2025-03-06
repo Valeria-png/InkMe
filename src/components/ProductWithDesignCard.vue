@@ -1,7 +1,7 @@
 <template>
-    <div class="w-65 rounded-xl overflow-hidden shadow-md bg-white">
+    <div class="min-w-3xs rounded-xl overflow-hidden shadow-md bg-white">
       <div class="h-57 bg-gray-300 flex items-center justify-center relative">
-        <img src="https://i.pinimg.com/736x/94/7d/d4/947dd49259f757d71e23c0fef0c8cb6e.jpg" alt="" class="w-full h-full object-cover">
+        <img src="https://i.pinimg.com/736x/21/90/d2/2190d28e4787bcec589daf1f3fe50c74.jpg" alt="" class="w-full h-full object-cover">
         <button class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus hover:text-navy" viewBox="0 0 16 16">
             <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
@@ -12,9 +12,19 @@
       </div>
       <div class="bg-[#FCDEE4] h-32 px-5 py-3">
         <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">$000.00</p>
-        <h3 class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg">Nombre Artículo</h3>
+        <h3 @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer">Nombre Artículo</h3>
         <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">Categoría o Nombre Creador</p>
       </div>
     </div>
+    <div v-if="isSelected" class="relative">
+      <PopupCommunityDesign @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
+    </div>
   </template>
+
+  <script setup>
+  import { ref } from 'vue';
+import PopupCommunityDesign from './PopupCommunityDesign.vue';
+  const isSelected = ref(false)
+
+  </script>
   

@@ -1,7 +1,7 @@
 <template>
-    <div class="flex shadow-md justify-center items-center w-screen h-screen backdrop-blur-xl">
+    <div class="flex shadow-md justify-center items-center w-screen h-screen backdrop-blur-xl z-100" >
         <div class="rounded-2xl bg-light-pink p-12 justify-center sm:w-[900px] sm:h-[450px] w-[90%] sm:m-0 mb-[2rem] h-[90vh] relative">
-            <button class="rounded-full p-2 bg-navy text-white absolute -top-4 -right-4 cursor-pointer hover:scale-105 transition hover:bg-black">
+            <button @click="emit('closePopup')" class="rounded-full p-2 bg-navy text-white absolute -top-4 -right-4 cursor-pointer hover:scale-105 transition hover:bg-black">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="5" stroke="currentColor" class="size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
@@ -25,11 +25,11 @@
                                 <option v-for="level in levels" :key="level.min" :value="level">{{ level.label }}</option>
                             </select>
                             <div class="rounded-xl bg-neon-pink h-full flex items-center justify-items-center w-auto" >
-                                <button @click="decrementQuantity" class="text-white pe-1 ps-3 border-0 text-2xl pb-1 font-bold ">-</button>
+                                <button @click="decrementQuantity" class="text-white pe-1 ps-3 border-0 text-2xl pb-1 font-bold cursor-pointer ">-</button>
                                 <span class="mx-2 text-2xl">
                                 <input type="number" v-model="quantity"  class="w-20 rounded-lg text-2xl max-w-xs text-center outline-none bg-white no-spinner " />
                                 </span>
-                                <button @click="incrementQuantity" class=" text-white ps-1 pe-3 border-0 text-2xl pb-1 font-bold ">+</button>
+                                <button @click="incrementQuantity" class=" text-white ps-1 pe-3 border-0 text-2xl pb-1 font-bold cursor-pointer ">+</button>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
 
 <script setup>
     import { ref,watch } from 'vue';
-
+    const emit = defineEmits(['closePopup'])
     const levels = [
         { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
         { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
@@ -57,35 +57,72 @@
     const quantity = ref(selectedLevel.value.min);
 
     watch(selectedLevel, (newLevel) => {
-        quantity.value = newLevel.min;
+        if (quantity.value === newLevel.max) {
+            quantity.value = newLevel.max;
+        }
+        else{
+            quantity.value = newLevel.min
+        }
+    })
+
+      watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+        //hasta aqui está bien
     })
 
     function incrementQuantity (){
         quantity.value++;
-        if (quantity.value >= 1 && quantity.value <= 50) {
-            selectedLevel.value = levels[0];
-        } else if (quantity.value >= 51 && quantity.value <= 200) {
-            selectedLevel.value = levels[1];
-        } else if (quantity.value >= 201) {
-            selectedLevel.value = levels[2];
-        }
+
     }
     function decrementQuantity(){
         if(quantity.value === 1) return
         quantity.value--;
-        val = quantity.value
-        if (quantity.value >= 1 && quantity.value <= 50) {
-            selectedLevel.value = levels[0];
-            quantity.value = val
-        } else if (quantity.value >= 51 && quantity.value <= 200) {
-            selectedLevel.value = levels[1];
-            quantity.value = val
-        } else if (quantity.value >= 201) {
-            selectedLevel.value = levels[2];
-            quantity.value = val
-        }
     }
-    console.log(quantity.value);
+
+
+    watch (quantity, (newQuantity) => {
+        if (newQuantity >= 1 && newQuantity <= 50) {
+            selectedLevel.value = levels[0];
+        } else if (newQuantity >= 51 && newQuantity <= 200) {
+            selectedLevel.value = levels[1];
+        } else if (newQuantity >= 201) {
+            selectedLevel.value = levels[2];
+        }
+    })
+
+    // function incrementQuantity (){
+    //     quantity.value++;
+    //     if (quantity.value >= 1 && quantity.value <= 50) {
+    //         selectedLevel.value = levels[0];
+    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
+    //         selectedLevel.value = levels[1];
+    //     } else if (quantity.value >= 201) {
+    //         selectedLevel.value = levels[2];
+
+    //     }
+    // }
+    // function decrementQuantity(){
+    //     if(quantity.value === 1) return
+    //     quantity.value--;
+    //     val = quantity.value
+    //     if (quantity.value >= 1 && quantity.value <= 50) {
+    //         selectedLevel.value = levels[0];
+    //         quantity.value = val
+    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
+    //         selectedLevel.value = levels[1];
+    //         quantity.value = val
+    //     } else if (quantity.value >= 201) {
+    //         selectedLevel.value = levels[2];
+    //         quantity.value = val
+    //     }
+    // }
+    // console.log(quantity.value);
 
 </script>
 
