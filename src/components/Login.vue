@@ -31,7 +31,7 @@
           </div>
             <p class="text-sm text-navy text-center mb-4">
             ¿No tienes cuenta aún? 
-            <a href="#" class="text-neon-pink font-semibold hover:underline ">Regístrate</a>
+            <a href="#" class="text-neon-pink font-semibold hover:underline" @click="router.push('/register')">Regístrate</a>
           </p>
 
           <button class="w-full cursor-pointer text-white text-lg hover:scale-105 bg-neon-pink hover:bg-dark-pink p-2 rounded-lg font-semibold transition" >
