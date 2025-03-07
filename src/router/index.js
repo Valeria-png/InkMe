@@ -12,6 +12,9 @@ import ProductPage from '@/views/ProductPage.vue'
 import SubirDiseño from '@/views/UploadDesignPage.vue'
 import Categories from '@/views/CategoryPage.vue'
 import OrderPage from '@/views/OrderPage.vue'
+import ContentModeration from '@/views/ContentModeration.vue'
+import AdminView from '@/views/AdminView.vue'
+import NavbarAdmin from '@/components/NavbarAdmin.vue'
 import FAQ from '@/views/FAQ.vue'
 
 const router = createRouter({
@@ -81,6 +84,22 @@ const router = createRouter({
     {
       path: '/categoria/:nombreCategoria',
       name: 'categorias',
+      component: Categories
+    },
+    {
+      path: '/moderar-contenido',
+      name: 'moderar-contenido',
+      component: ContentModeration
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView
+    },
+    {
+      path: '/navbar-admin',
+      name: 'navbar-admin',
+      component: NavbarAdmin
       component: Categories,
       props: route => ({ nombreCategoria: String(route.params.nombreCategoria) })
     },
