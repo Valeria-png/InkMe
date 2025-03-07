@@ -12,6 +12,7 @@ import ProductPage from '@/views/ProductPage.vue'
 import SubirDiseño from '@/views/UploadDesignPage.vue'
 import Categories from '@/views/CategoryPage.vue'
 import OrderPage from '@/views/OrderPage.vue'
+import EstatusCompra from '@/views/PurchaseStatus.vue'
 import ContentModeration from '@/views/ContentModeration.vue'
 import AdminView from '@/views/AdminView.vue'
 import NavbarAdmin from '@/components/NavbarAdmin.vue'
@@ -67,14 +68,20 @@ const router = createRouter({
       component : OrderView
     },
     {
-      path : '/pedido',
+      path : '/pedido/:id',
       name : 'order',
-      component : OrderPage
+      component : OrderPage,
+      props : true
     },
     {
       path : '/product-status',
       name : 'product-status',
       component : OrderStatus
+    },
+    {
+      path : '/estatus-compra',
+      name : 'estatus-compra',
+      component : EstatusCompra
     },
     {
       path: '/subir-diseno',
