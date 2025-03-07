@@ -10,7 +10,7 @@
             <button type="" class="bg-navy text-white py-2 px-4 rounded-lg font-inter">Ordenar por</button>
         </div>
         <section class="flex flex-wrap gap-10 py-4 justify-center">
-            <ProductCard v-for="i in 8" :key="i"></ProductCard>  
+            <ProductCard v-for="producto in products" :key="producto._id" :id="producto._id" :category="producto.category" :productName="producto.name" :price="producto.lvl1_price" :img="producto.file"></ProductCard>  
         </section>
 
         
@@ -19,11 +19,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import CategoryItem from '@/components/CategoryItem.vue';
 import ProductCard from '@/components/BaseProductCard.vue';
+
+const products = ref([]);
+
+async function getProducts() {
+    const response = await fetch('https://inkmeapi.onrender.com/api/products')
+    const data = await response.json();
+    products.value = data.filter(products => products.id_design === '67c8fd5be649175d9da80f1c');
+}
+
+onMounted(() => {
+    getProducts();
+})
 
 const categories = ref([
     {

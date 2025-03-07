@@ -4,7 +4,7 @@
     </header>
     <main class=" flex flex-col md:flex-row px-10 py-4 ">
         <div class="relative w-full  md:w-3/8">
-            <img src="https://i.pinimg.com/736x/74/83/a4/7483a4b263dafce7b31b707804dbd73d.jpg" alt="" class="w-full rounded-xl">
+            <img :src="product.file" alt="" class="w-full rounded-xl">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus absolute top-4 right-4 text-neon-pink hover:cursor-pointer hover:scale-105 transition hover:text-navy" viewBox="0 0 16 16">
                 <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
                 <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
@@ -63,12 +63,12 @@
         </div>
         <div class="w-full md:w-1/2 flex flex-col gap-10">
             <div class="font-inter flex flex-col gap-4 ">
-                <h1 class="text-dark-violet font-semibold text-3xl text-wrap"> Nombre del producto</h1>
+                <h1 class="text-dark-violet font-semibold text-3xl text-wrap"> {{ product.name }}</h1>
                 <hr>
-                <p class="text-wrap text-lg text-navy">Descripcion</p>
+                <p class="text-wrap text-lg text-navy">{{ product.description }}</p>
             </div>
             <div class="flex flex-col gap-6">
-                <p class="text-neon-pink font-bagel-fat-one text-3xl">$000.00 c/u</p>
+                <p class="text-neon-pink font-bagel-fat-one text-3xl">$ {{ price }} c/u</p>
                 <div class="flex gap-8">
                     <select name="" id="" v-model="selectedLevel"   class="text-navy font-inter outline-neon-pink bg-white rounded-lg">
                         <option v-for="level in levels" :key="level.min" :value="level">{{ level.label }}</option>
@@ -100,7 +100,28 @@ import Navbar from '../components/Navbar.vue';
 import Footer from '../components/Footer.vue';
 import ProductCard from '@/components/BaseProductCard.vue';
 import DesignItem from '@/components/DesignItem.vue';
-import { ref,watch } from 'vue';
+import { ref,watch,onMounted } from 'vue';
+
+
+const product = ref({})
+const price = ref(0)
+const props = defineProps({
+    id: String})
+
+async function getProduct(){
+    const response = await fetch(`https://inkmeapi.onrender.com/api/products/${props.id}`)
+
+    const data = await response.json()
+    product.value = data
+    price.value = data.lvl1_price
+}
+onMounted(() => {
+    getProduct()
+    
+    console.log(price)
+})
+
+
 
 const tabIsActive = ref(true)
 const levels = [
@@ -119,15 +140,20 @@ const levels = [
         else{
             quantity.value = newLevel.min
         }
+
     })
+    
 
       watch (quantity, (newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 50) {
             selectedLevel.value = levels[0];
+            price.value = product.value.lvl1_price
         } else if (newQuantity >= 51 && newQuantity <= 200) {
             selectedLevel.value = levels[1];
+            price.value = product.value.lvl2_price
         } else if (newQuantity >= 201) {
             selectedLevel.value = levels[2];
+            price.value = product.value.lvl3_price
         }
         //hasta aqui está bien
     })

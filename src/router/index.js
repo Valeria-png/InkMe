@@ -52,9 +52,10 @@ const router = createRouter({
       component: CommunityDesigns,
     },
     {
-      path : '/product',
+      path : '/producto/:id',
       name : 'producto',
-      component : ProductPage
+      component : ProductPage,
+      props: route => ({ id: String(route.params.id) })
     },
     {
       path : '/mis-pedidos',
