@@ -1,17 +1,22 @@
 <template>
-  <router-link to="/categoria">
-    <button class="flex items-center hover:scale-105 transition font-inter gap-2 bg-[#00224D] text-white rounded-xl p-4 w-70 justify-center">
-      <img src="" alt="" class="h-8 w-16 bg-gray-300 rounded-md " />
-      <span>
-        Nombre Categoría
-      </span>
-    </button>
-  </router-link>
+
+  <button @click="router.push(`/categoria/${nombreCategoria}`)" class="cursor-pointer flex items-center hover:scale-105 transition font-inter  gap-2 bg-[#00224D] text-white rounded-xl p-4 w-70 justify-center">
+    <img :src="img" alt="" class="size-12 bg-white rounded-md p-1" />
+    <span>
+      {{ nombreCategoria }}
+    </span>
+  </button>
+
 </template>
 
-<script>
-export default {
-  name: 'CategoryItem'
-}
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const props = defineProps({ 
+    img: String,
+    nombreCategoria: String
+})
 </script>
   

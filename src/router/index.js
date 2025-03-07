@@ -53,9 +53,10 @@ const router = createRouter({
       component: CommunityDesigns,
     },
     {
-      path : '/product',
+      path : '/producto/:id',
       name : 'producto',
-      component : ProductPage
+      component : ProductPage,
+      props: route => ({ id: String(route.params.id) })
     },
     {
       path : '/mis-pedidos',
@@ -78,9 +79,10 @@ const router = createRouter({
       component: SubirDiseño
     },
     {
-      path: '/categoria',
+      path: '/categoria/:nombreCategoria',
       name: 'categorias',
-      component: Categories
+      component: Categories,
+      props: route => ({ nombreCategoria: String(route.params.nombreCategoria) })
     },
     {
       path: '/preguntas-frecuentes',
