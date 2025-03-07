@@ -1,26 +1,36 @@
 <template>
-    <Navbar></Navbar>
-    <div class="grid sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 py-12">
+    <Navbar />
+    <div class="sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 py-12">
+      <h5 class="text-dark-blue font-bold text-xl mb-4">Pedido del 04/02/2025</h5>
+      <div class="bg-white p-6 rounded-lg shadow">
         <OrderDetailsItem
-            v-for="item in ProductCards" 
-            :key="item.id" 
-            :item="item"
+          v-for="item in ProductCards" 
+          :key="item.id" 
+          :item="item"
         />
+      </div>
     </div>
     <Footer></Footer>
   </template>
   
   <script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import Navbar from '@/components/Navbar.vue';
+import Footer from '@/components/Footer.vue';
+import OrderDetailsItem from '@/components/OrderDetailsItem.vue';
 
-  import Navbar from '@/components/Navbar.vue';
-  import Footer from '@/components/Footer.vue';
-  import OrderDetailsItem from '@/components/OrderDetailsItem.vue';
-  import { ref } from 'vue';
+const route = useRoute();
+const order = ref(null);
 
-  
-  const ProductCards = ref([
-      { id: 1, name: "Artículo 1", imagen: "", price: 150, unitPrice: 150, level: "nivel menudeo" },
-      { id: 2, name: "Artículo 2", imagen: "", price: 300, unitPrice: 100, level: "nivel menudeo" },
-      { id: 3, name: "Artículo 3", imagen: "", price: 300, unitPrice: 100, level: "nivel menudeo" }
-  ]);
-  </script>
+async function fetchOrderDetails() {
+  try {
+    const response = await fetch(`https://inkmeapi.onrender.com/api/orders/${route.params.id}`);
+    order.value = await response.json();
+  } catch (error) {
+    console.error('Error cargando el pedido:', error);
+  }
+}
+
+onMounted(fetchOrderDetails);
+</script>

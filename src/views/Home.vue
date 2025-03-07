@@ -5,7 +5,7 @@
     <section>
       <div class="bg-[#FF204E] text-white p-16 rounded-lg relative">
         <h1 class="text-7xl font-bagel-fat-one">
-          De tu imaginación, <br />
+          De tu imaginaciónNNNNN, <br />
           a la puerta de tu casa
         </h1>
         <p class="mt-4 text-3xl font-inter">

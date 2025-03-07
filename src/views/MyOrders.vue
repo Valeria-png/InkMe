@@ -14,12 +14,25 @@
   import Navbar from '@/components/Navbar.vue';
   import Footer from '@/components/Footer.vue';
   import OrderCard from '@/components/OrderCard.vue';
+
+async function fetchOrders() {
+    const response = await fetch('https://inkmeapi.onrender.com/api/orders/user/67c1bccc03ce764eceec5441');
+    return await response.json();
+  }
   
-  const orders = ref([
-    { id: 1, date: 'DD/MM/YYYY', items: 3, total: 0, status: 'pending' },
-    { id: 2, date: 'DD/MM/YYYY', items: 6, total: 0, status: 'pending' },
-    { id: 3, date: 'DD/MM/YYYY', items: 4, total: 0, status: 'pending' },
-    { id: 4, date: 'DD/MM/YYYY', items: 9, total: 0, status: 'pending' },
-    { id: 5, date: 'DD/MM/YYYY', items: 2, total: 0, status: 'pending' },
-  ]);
+  const orders = ref([]);
+  
+  fetchOrders().then(data => {
+  orders.value = data.map(order => ({
+    id: order._id, 
+    user: order.user_id,
+    items: order.items.length,
+    total: order.total,
+    deliveryCost: order.deliveryCost,
+    deliveryAddress: order.deliveryAddress,
+    date: order.date,
+    status: order.status
+  }));
+});
+
   </script>
