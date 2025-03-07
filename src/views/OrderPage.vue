@@ -1,19 +1,21 @@
 <template>
-    <Navbar />
-    <div class="sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 py-12">
-      <h5 class="text-dark-blue font-bold text-xl mb-4">Pedido del 04/02/2025</h5>
-      <div class="bg-white p-6 rounded-lg shadow">
-        <OrderDetailsItem
-          v-for="item in ProductCards" 
-          :key="item.id" 
-          :item="item"
-        />
-      </div>
+  <Navbar />
+  <div class="sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 py-12">
+    <h5 class="text-dark-blue font-bold text-xl mb-4">
+      Pedido del {{ new Date(order?.date).toLocaleDateString('es-MX') }}
+    </h5>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <OrderDetailsItem
+        v-for="item in order?.items || []" 
+        :key="item._id" 
+        :item="item"
+      />
     </div>
-    <Footer></Footer>
-  </template>
-  
-  <script setup>
+  </div>
+  <Footer />
+</template>
+
+<script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';

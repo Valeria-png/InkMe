@@ -10,8 +10,8 @@
       ></span>
     </div>
     <div class="ml-4 flex flex-col justify-between">
-      <h2 class="text-dark-violet font-semibold text-lg">{{ order.date }}</h2>
-      <p class="text-gray-600">{{ order.items.length }} Artículos</p>
+      <h2 class="text-dark-violet font-semibold text-lg">{{ new Date(order.date).toLocaleDateString('es-MX') }}</h2>
+      <p class="text-gray-600">{{ order.items }} Artículos</p>
       <button 
         @click.stop="goToOrderDetails"
         class="bg-pink-200 text-neon-pink px-2 py-1 rounded-md text-sm"
