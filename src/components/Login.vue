@@ -39,6 +39,9 @@
            Iniciar Sesión
           </button>
         </form>
+
+      </div>
+    </div>
 =======
   <div class="flex items-center font-inter justify-center min-h-screen bg-color-light-pink">
     <div class="bg-light-pink p-8 rounded-lg shadow-lg w-96">

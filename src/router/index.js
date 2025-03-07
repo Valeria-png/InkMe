@@ -17,6 +17,7 @@ import ContentModeration from '@/views/ContentModeration.vue'
 import AdminView from '@/views/AdminView.vue'
 import NavbarAdmin from '@/components/NavbarAdmin.vue'
 import FAQ from '@/views/FAQ.vue'
+import Register from '@/components/Register.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
     },
     {
       path: '/category',
@@ -91,7 +97,8 @@ const router = createRouter({
     {
       path: '/categoria/:nombreCategoria',
       name: 'categorias',
-      component: Categories
+      component: Categories,
+      props: route => ({ nombreCategoria: String(route.params.nombreCategoria) })
     },
     {
       path: '/moderar-contenido',
@@ -107,8 +114,6 @@ const router = createRouter({
       path: '/navbar-admin',
       name: 'navbar-admin',
       component: NavbarAdmin
-      component: Categories,
-      props: route => ({ nombreCategoria: String(route.params.nombreCategoria) })
     },
     {
       path: '/preguntas-frecuentes',
