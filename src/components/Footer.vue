@@ -5,7 +5,7 @@
         <div class="text-left md:text-right md:ml-auto">
           <h4 class="font-bold text-xl">Comienza a crear</h4>
           <ul class="text-navy text-base md:text-lg">
-            <li>Preguntas frecuentes</li>
+            <li @click="router.push('/preguntas-frecuentes')" class="cursor-pointer hover:underline">Preguntas frecuentes</li>
             <li>Mis diseños</li>
             <li>Términos y condiciones</li>
           </ul>

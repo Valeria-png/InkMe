@@ -12,6 +12,7 @@ import ProductPage from '@/views/ProductPage.vue'
 import SubirDiseño from '@/views/UploadDesignPage.vue'
 import Categories from '@/views/CategoryPage.vue'
 import OrderPage from '@/views/OrderPage.vue'
+import FAQ from '@/views/FAQ.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,11 @@ const router = createRouter({
       path: '/categoria',
       name: 'categorias',
       component: Categories
+    },
+    {
+      path: '/preguntas-frecuentes',
+      name: 'preguntas-frecuentes',
+      component: FAQ
     }
 
   ],
