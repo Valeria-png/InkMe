@@ -66,21 +66,19 @@ const login = async () => {
       }),
     });
 
-    // Si la respuesta es correcta, procesamos el token
+    // Procesa el token
     if (!response.ok) {
       throw new Error('Error en las credenciales');
     }
 
     const data = await response.json();
-
-    // Guardamos el token en el localStorage
     localStorage.setItem('token', data.token);
 
-    // Decodificamos el token para obtener el rol del usuario
-    const decodedToken = JSON.parse(atob(data.token.split('.')[1])); // Decodificar el token JWT
+    // Decodifica el token para obtener el rol del usuario
+    const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
     const userRole = decodedToken.type_rol;
 
-    // Verifica el rol del usuario y redirige según corresponda
+    // Verifica el rol del usuario
     if (userRole === 'admin') {
       router.push('/admin'); // Redirigir a la vista de admin
     } else if (userRole === 'user') {
@@ -91,7 +89,6 @@ const login = async () => {
 
   } catch (error) {
     console.error('Error de inicio de sesión:', error.message);
-    // Puedes mostrar un mensaje de error al usuario si es necesario
   }
 };
 </script>
