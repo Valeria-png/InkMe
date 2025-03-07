@@ -1,7 +1,9 @@
 <template>
         <div class="px-12 py-8">
     <div class="flex items-center space-x-4 mb-6">
-      <img src="/public/inkme logo.png" alt="Logo Inkme" class="w-35" />
+      <router-link to="/admin">
+       <img src="/public/inkme logo.png" alt="Logo Inkme" class="w-35" />
+      </router-link>
       <div class="flex space-x-2 overflow-auto">
         <div v-for="n in 25" :key="n" class="min-w-14 h-14 bg-gray-300 rounded"></div>
       </div>
