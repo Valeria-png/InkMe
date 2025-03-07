@@ -30,7 +30,7 @@ const products = ref([]);
 async function getProducts() {
     const response = await fetch('https://inkmeapi.onrender.com/api/products')
     const data = await response.json();
-    products.value = data.filter(products => products.id_design === '67c8fd5be649175d9da80f1c');
+    products.value = data
 }
 
 onMounted(() => {
