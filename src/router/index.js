@@ -78,9 +78,10 @@ const router = createRouter({
       component: SubirDiseño
     },
     {
-      path: '/categoria',
+      path: '/categoria/:nombreCategoria',
       name: 'categorias',
-      component: Categories
+      component: Categories,
+      props: route => ({ nombreCategoria: String(route.params.nombreCategoria) })
     }
 
   ],
