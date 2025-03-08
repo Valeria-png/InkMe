@@ -1,7 +1,7 @@
 <template>
     <div class="min-w-3xs max-w-3xs rounded-xl overflow-hidden shadow-md bg-white">
       <div class="h-57 bg-gray-100 flex items-center justify-center relative">
-        <img :src="props.img" alt="" class="w-full h-full object-cover">
+        <img :src="props.design.file" alt="" class="w-full h-full object-cover">
         <button class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus hover:text-navy" viewBox="0 0 16 16">
             <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
@@ -11,43 +11,40 @@
         </button>
       </div>
       <div class="bg-[#FCDEE4] h-35 px-5 py-3">
-        <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">${{ props.addedPrice }}</p>
-        <h3 @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer"> de {{ props.designName }}</h3>
+        <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">${{ price }}</p>
+        <h3 @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer">{{ props.product.name }} de {{ props.design.name }}</h3>
         <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">{{ creatorName }}</p>
       </div>
     </div>
     <div v-if="isSelected" class="relative">
-      <PopupCommunityDesign :img="props.img" :productName="props.designName" :price="props.addedPrice" :creator="creatorName" :description="product.design_id.description" @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
+      <PopupCommunityDesign :design="props.design" :product="props.product" :creator="creatorName"  @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
     </div>
   </template>
 
   <script setup>
-  import { ref,onMounted } from 'vue';
+  import { ref,onMounted,computed } from 'vue';
 import PopupCommunityDesign from './PopupCommunityDesign.vue';
+const creatorName = ref('')
+const price = ref()
+
   const isSelected = ref(false)
   const props = defineProps({
-    id: String,
-    creator: String,
-    designName: String,
-    img: String,
-    addedPrice: Number
+    design: Object,
+    product: Object
 
   })
-  const creatorName = ref('')
-  const product = ref({})
+
+
   async function getCreator(){
-    const response = await fetch(`https://inkmeapi.onrender.com/api/users/${props.creator}`);
+    const response = await fetch(`https://inkmeapi.onrender.com/api/users/${props.design.user_id}`);
     const data = await response.json();
     creatorName.value = data.name
   }
-  async function getProduct(){
-    const response = await fetch(`https://inkmeapi.onrender.com/api/designedProducts/${props.id}`);
-    const data = await response.json();
-    product.value = data
-  }
+
   onMounted(() => {
     getCreator()
-    getProduct()
+    price.value =  props.product.lvl1_price + props.design.added_value;
   })
+
   </script>
   

@@ -7,8 +7,8 @@
                 </svg>
             </button>
             <div class="flex gap-6 items-center">
-                <div class="relative">
-                    <img :src="props.img" alt="" class="w-72 h-86 rounded-lg">
+                <div class="relative w-3/4">
+                    <img :src="props.design.file" alt="" class="w-72 h-86 rounded-lg">
                     <div class="absolute top-4 right-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus-fill text-neon-pink hover:cursor-pointer hover:scale-105 transition hover:text-navy" viewBox="0 0 16 16">
                             <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0"/>
@@ -17,8 +17,8 @@
                 </div>
                 <div class="div flex flex-col gap-2 h-86 justify-between">
                     <div class="flex flex-col gap-2">
-                        <h2 class="text-neon-pink font-bagel-fat-one text-3xl">$ {{ props.price }}</h2>
-                        <h2 class="text-dark-violet text-inter text-3xl	font-semibold text-wrap">{{ props.productName }}</h2>
+                        <h2 class="text-neon-pink font-bagel-fat-one text-3xl">$ {{ price }}</h2>
+                        <h2 class="text-dark-violet text-inter text-3xl	font-semibold text-wrap">{{ props.product.name }} de {{ props.design.name }}</h2>
                         <p class="text-dark-violet font-inter">{{ props.creator }}</p>
                         <div class="flex gap-6">
                             <select name="" id="" v-model="selectedLevel"   class="text-navy font-inter outline-neon-pink bg-white rounded-lg">
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="flex flex-col gap-6">
-                        <p class="text-navy font-inter text-wrap">{{ props.description }}</p>
+                        <p class="text-navy font-inter text-wrap">{{ props.product.description }} Con diseño de {{ props.design.name }}. Descripción de diseño: {{ props.design.description }}</p>
                         <button class="bg-neon-pink w-full rounded-xl text-xl place-self-center p-2 text-white text-semibold font-inter hover:scale-105 transition hover:bg-dark-pink">Comprar Ahora</button>
                     </div>
                 </div>
@@ -47,14 +47,13 @@
 <script setup>
     import { ref,watch } from 'vue';
     const props = defineProps({
-        productName: String,
-        img: String,
+        product: Object,
+        design: Object,
         creator: String,
-        price: Number,
-        description: String
         // Cambiar para que sea un fetch después
     })
     const emit = defineEmits(['closePopup'])
+    const price = ref(props.product.lvl1_price+props.design.added_value) 
     const levels = [
         { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
         { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
@@ -76,10 +75,13 @@
       watch (quantity, (newQuantity) => {
         if (newQuantity >= 1 && newQuantity <= 50) {
             selectedLevel.value = levels[0];
+            price.value = props.product.lvl1_price+props.design.added_value
         } else if (newQuantity >= 51 && newQuantity <= 200) {
             selectedLevel.value = levels[1];
+            price.value = props.product.lvl2_price+props.design.added_value
         } else if (newQuantity >= 201) {
             selectedLevel.value = levels[2];
+            price.value = props.product.lvl3_price+props.design.added_value
         }
         //hasta aqui está bien
     })

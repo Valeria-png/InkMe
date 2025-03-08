@@ -1,7 +1,7 @@
 <template>
     <div v-for="categoria in categorias" :key="categoria.id">
         <div class="flex items-center  p-4 gap-4">
-            <input type="checkbox" name="" id="" class="w-4 h-4 rounded-xl">
+            <input @change="emits('filter',  $event.target.checked ? categoria.name : null)" type="checkbox" name="filter" id="" class="w-4 h-4 rounded-xl">
             <h1 class="font-inter text-[18px] text-white">{{ categoria.name }}</h1>
 
         </div>
@@ -11,6 +11,7 @@
 
 <script setup>
 import { ref } from 'vue';
+const emits = defineEmits(['filter'])
 
 const categorias = ref([
   { id: 1, name: "Ropa" },
