@@ -1,5 +1,5 @@
 <template>
-    <div class="min-w-3xs max-w-3xs rounded-xl overflow-hidden shadow-md bg-white">
+    <div class="min-w-2xs max-w-2xs rounded-xl overflow-hidden shadow-md bg-white">
       <div class="h-57 bg-gray-100 flex items-center justify-center relative">
         <img :src="props.design.file" alt="" class="w-full h-full object-cover">
         <button class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
@@ -10,7 +10,7 @@
 
         </button>
       </div>
-      <div class="bg-[#FCDEE4] h-35 px-5 py-3">
+      <div class="bg-[#FCDEE4] h-45 px-5 py-3">
         <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">${{ price }}</p>
         <h3 @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer">{{ props.product.name }} de {{ props.design.name }}</h3>
         <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">{{ creatorName }}</p>
