@@ -3,48 +3,52 @@
     <!-- Sección principal -->
     <Navbar></Navbar>
     <section>
-      <div class="bg-[#FF204E] text-white p-16 rounded-lg relative">
-        <h1 class="text-7xl font-bagel-fat-one">
+      <div class="bg-[#FF204E] text-white p-8 md:p-16 rounded-lg relative">
+        <h1 class="text-4xl md:text-7xl font-bagel-fat-one">
           De tu imaginación, <br />
           a la puerta de tu casa
         </h1>
-        <p class="mt-4 text-3xl font-inter">
-          Escoge uno de nuestros productos personalizables, <br />
+        <p class="mt-4 text-xl md:text-3xl font-inter">
+          Escoge uno de nuestros productos personalizables, <br class="hidden md:inline" />
           sube tu diseño, recibe tu creación
         </p>
 
-        <!-- Contenedor de imágenes (íconos) -->
-        <div class="absolute top-0 right-70 p-10">
-          <img src="../assets/img/image 1.png" alt="head" class="w-45" />
+        <!-- Contenedor de imágenes (íconos) SOLO para escritorio -->
+        <div class="hidden md:block absolute top-0 right-20">
+          <img src="../assets/img/image 1.png" alt="head" class="w-28 md:w-45" />
         </div>
-        <div class="absolute bottom-5 right-20 p-4">
-          <img src="../assets/img/image 2.png" alt="door package" class="w-40" />
+        <div class="hidden md:block absolute bottom-5 right-20">
+          <img src="../assets/img/image 2.png" alt="door package" class="w-24 md:w-40" />
         </div>
-        <div class="absolute bottom-5 left-270 p-4">
-          <img src="../assets/img/Arrow 2.png" alt="package" class="w-35" />
+        <div class="hidden md:block absolute bottom-5 right-80">
+          <img src="../assets/img/Arrow 2.png" alt="package" class="w-20 md:w-35" />
         </div>
 
         <!-- Botón con navegación a /catalogo -->
         <router-link to="/catalogo">
           <button
-            class="mt-5 px-15 py-5 text-white font-inter text-2xl font-semibold rounded-xl border-2 border-white bg-gradient-to-r from-neon-pink via-dark-violet to-navy transform transition duration-500 ease-in-out hover:scale-105 hover:bg-gradient-to-l"
+            class="mt-5 px-6 md:px-15 py-3 md:py-5 text-white font-inter text-lg md:text-2xl font-semibold rounded-xl border-2 border-white bg-gradient-to-r from-neon-pink via-dark-violet to-navy transform transition duration-500 ease-in-out hover:scale-105 hover:bg-gradient-to-l"
           >
             Empezar a personalizar ahora
           </button>
         </router-link>
       </div>
 
-      <div class="text-center m-0 bg-light-pink p-16 rounded-lg bg-[#FCDEE4]">
-        <h2 class="text-center text-6xl font-bagel-fat-one text-[#7E0252]">
+      <!-- Segunda sección -->
+      <div class="text-center m-0 bg-light-pink p-8 md:p-16 rounded-lg bg-[#FCDEE4] mt-6">
+        <h2 class="text-3xl md:text-6xl font-bagel-fat-one text-[#7E0252]">
           Gana <span class="text-[#FF204E]">dinero</span> con tus <span class="text-[#FF204E]">diseños</span>
         </h2>
-        <p class="mt-8 text-xl font-inter text-[#A0153E]">Publica tu diseño para toda la comunidad, y recibe comisiones por cada venta.</p>
-        <img src="../assets/img/Frame 30.png" alt="frames" class="mx-auto mt-10" />
+        <p class="mt-4 md:mt-8 text-lg md:text-xl font-inter text-[#A0153E]">
+          Publica tu diseño para toda la comunidad, y recibe comisiones por cada venta.
+        </p>
+        <!-- Imagen SOLO para escritorio -->
+        <img src="../assets/img/Frame 30.png" alt="frames" class="hidden md:block mx-auto mt-6 md:mt-10 w-40 md:w-auto" />
 
         <!-- Botón con navegación a /mis-disenos -->
         <router-link to="/mis-disenos">
           <button
-            class="mt-9 px-9 py-5 text-white text-xl font-inter font-semibold rounded-xl border-1 border-white bg-gradient-to-r from-neon-pink via-dark-violet to-navy transform transition duration-500 ease-in-out hover:scale-105 hover:bg-gradient-to-l"
+            class="mt-6 md:mt-9 px-6 md:px-9 py-3 md:py-5 text-white text-lg md:text-xl font-inter font-semibold rounded-xl border border-white bg-gradient-to-r from-neon-pink via-dark-violet to-navy transform transition duration-500 ease-in-out hover:scale-105 hover:bg-gradient-to-l"
           >
             Subir un diseño ahora
           </button>
@@ -53,31 +57,33 @@
     </section>
 
     <!-- Sección de precios -->
-    <section class="text-center p-16 flex flex-col gap-6">
-      <h2 class="text-7xl font-bagel-fat-one text-[#7E0252]">
+    <section class="text-center p-8 md:p-16 flex flex-col gap-6">
+      <h2 class="text-4xl md:text-7xl font-bagel-fat-one text-[#7E0252]">
         Precios a <span class="text-[#FF204E]">tu</span> medida
       </h2>
-      <p class="text-3xl text-[#A0153E] font-inter">3 Niveles de precios</p>
-      <div class="flex justify-center gap-10 text-5xl font-bold">
+      <p class="text-xl md:text-3xl text-[#A0153E] font-inter">
+        3 Niveles de precios
+      </p>
+      <div class="flex flex-col md:flex-row justify-center gap-5 md:gap-10 text-2xl md:text-5xl font-bold">
         <div class="text-neon-pink font-bagel-fat-one">
-          Menudeo<p class="text-4xl font-normal">1-50 pzas</p>
+          Menudeo<p class="text-lg md:text-4xl font-normal">1-50 pzas</p>
         </div>
         <div class="text-neon-pink font-bagel-fat-one">
-          Mayoreo 1<p class="text-4xl font-normal">51-200 pzas</p>
+          Mayoreo 1<p class="text-lg md:text-4xl font-normal">51-200 pzas</p>
         </div>
         <div class="text-neon-pink font-bagel-fat-one">
-          Mayoreo 2<p class="text-4xl font-normal">201+ pzas</p>
+          Mayoreo 2<p class="text-lg md:text-4xl font-normal">201+ pzas</p>
         </div>
       </div>
 
-      <p class="text-2xl text-[#A0153E] my-2 font-inter">
+      <p class="text-lg md:text-2xl text-[#A0153E] my-2 font-inter">
         Ofrecemos precios de menudeo o mayoreo de acuerdo a tus necesidades personales.
       </p>
     </section>
 
-    <!-- Incluir Footer aquí -->
+    <!-- Footer -->
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <script setup>
