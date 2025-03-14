@@ -15,7 +15,8 @@ import OrderPage from '@/views/OrderPage.vue'
 import EstatusCompra from '@/views/PurchaseStatus.vue'
 import ContentModeration from '@/views/ContentModeration.vue'
 import AdminView from '@/views/AdminView.vue'
-import NavbarAdmin from '@/components/NavbarAdmin.vue'
+import { useUserStore } from "@/stores/userStore";
+
 import FAQ from '@/views/FAQ.vue'
 import Register from '@/components/Register.vue'
 import ConfirmacionPago from '@/views/OrderConfirmation.vue'
@@ -84,7 +85,8 @@ const router = createRouter({
     {
       path : '/product-status',
       name : 'product-status',
-      component : OrderStatus
+      component : OrderStatus,
+      meta: { requiresAuth: true, role: "admin" }
     },
     {
       path : '/estatus-compra',
@@ -110,17 +112,14 @@ const router = createRouter({
     {
       path: '/moderar-contenido',
       name: 'moderar-contenido',
-      component: ContentModeration
+      component: ContentModeration,
+      meta: { requiresAuth: true, role: "admin" } 
     },
     {
       path: '/admin',
       name: 'admin',
-      component: AdminView
-    },
-    {
-      path: '/navbar-admin',
-      name: 'navbar-admin',
-      component: NavbarAdmin
+      component: AdminView,
+      meta: { requiresAuth: true, role: "admin" } 
     },
     {
       path: '/preguntas-frecuentes',
@@ -135,5 +134,21 @@ const router = createRouter({
 
   ],
 })
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore(); // Dynamically get the store inside guard
+
+  if (to.meta.requiresAuth) {
+    if (!userStore.id) {
+      next("/login"); // Redirect to login if not authenticated
+    } else if (to.meta.role !== userStore.typeRol) {
+      next("/"); // Redirect unauthorized users to home
+    } else if ( to.meta.role === userStore.typeRol) {
+      next(); // Allow access
+    }
+  } else {
+    next(); // Allow public pages
+  }
+});
+
 
 export default router
