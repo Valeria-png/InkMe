@@ -54,6 +54,9 @@ import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
+
+const userStore = useUserStore();
 
 const router = useRouter();
 
@@ -73,7 +76,7 @@ function previewImage(event){
 
 const subirDiseno = async () => {
   const formData = new FormData();
-  formData.append('user_id','67ca0e6f906eeb5d8426ac6a')
+  formData.append('user_id',userStore.id)
   
   formData.append('file',archivo.value)
   formData.append('name',titulo.value)

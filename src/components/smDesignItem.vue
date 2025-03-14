@@ -7,13 +7,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore();
 const emits = defineEmits(['chosen-design'])
 const designs = ref([])
 const selectedDesignId = ref(null)
 async function  getDesigns(){
     const response = await fetch ("https://inkmeapi.onrender.com/api/designs")
     const data = await response.json()
-    designs.value = data
+    designs.value = data.filter(design => design.user_id === userStore.id)
 }
 onMounted(() => {
     getDesigns()

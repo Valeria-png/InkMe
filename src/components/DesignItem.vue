@@ -22,6 +22,9 @@
     import { defineProps } from 'vue';
 
     const props = defineProps({
-        img: String
+        img: String,
+        name: String,
+        addedValue: Number
+
     })
 </script>

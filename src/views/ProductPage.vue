@@ -113,6 +113,8 @@ import ProductCard from '@/components/BaseProductCard.vue';
 import DesignItem from '@/components/DesignItem.vue';
 import smDesignItem from '@/components/smDesignItem.vue';
 import { ref,watch,onMounted } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore();
 
 const aceptoPublicar = ref(false)
 const productsInCategory = ref([])
@@ -265,12 +267,12 @@ const addDesignToProduct= async () =>{
 async function uploadText(){
     const formData2 = new FormData()
     formData2.append("file", imageBlob.value);
-    formData2.append("user_id", "67ca0e6f906eeb5d8426ac6a");
+    formData2.append("user_id", userStore.id);
     formData2.append("text", null);
     formData2.append("text_color", null);
     formData2.append("added_value", 0);
-    formData2.append("name", "prueba Texto3");
-    formData2.append("description", null);
+    formData2.append("name", `diseno${userStore.id}`);
+    formData2.append("description", `diseno${text.value}`);
     try{
         const response = await fetch('https://inkmeapi.onrender.com/api/designs',{
         method: 'POST',
