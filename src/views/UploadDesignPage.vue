@@ -48,7 +48,7 @@
     </div>
     <Footer />
   </template>
-
+<!-- cambiar el user id para que sea dinamico -->
 <script setup>
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
@@ -74,6 +74,7 @@ function previewImage(event){
 const subirDiseno = async () => {
   const formData = new FormData();
   formData.append('user_id','67ca0e6f906eeb5d8426ac6a')
+  
   formData.append('file',archivo.value)
   formData.append('name',titulo.value)
   formData.append('added_value',valor.value)
