@@ -18,6 +18,7 @@ import AdminView from '@/views/AdminView.vue'
 import NavbarAdmin from '@/components/NavbarAdmin.vue'
 import FAQ from '@/views/FAQ.vue'
 import Register from '@/components/Register.vue'
+import Resultados from '@/views/Resultados.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -119,6 +120,11 @@ const router = createRouter({
       path: '/preguntas-frecuentes',
       name: 'preguntas-frecuentes',
       component: FAQ
+    },
+    {
+      path: '/resultados',
+      name: 'resultados',
+      component: Resultados
     }
 
   ],

@@ -46,7 +46,7 @@
         <img src="../assets/img/Frame 30.png" alt="frames" class="hidden md:block mx-auto mt-6 md:mt-10 w-40 md:w-auto" />
 
         <!-- Botón con navegación a /mis-disenos -->
-        <router-link to="/mis-disenos">
+        <router-link to="/subir-diseno">
           <button
             class="mt-6 md:mt-9 px-6 md:px-9 py-3 md:py-5 text-white text-lg md:text-xl font-inter font-semibold rounded-xl border border-white bg-gradient-to-r from-neon-pink via-dark-violet to-navy transform transition duration-500 ease-in-out hover:scale-105 hover:bg-gradient-to-l"
           >
