@@ -91,6 +91,7 @@ const login = async () => {
     }
 
     authStore.login({
+      id: decodedToken.id,
       name: decodedToken.name,
       type_rol: decodedToken.type_rol
     });
