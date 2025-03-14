@@ -1,5 +1,4 @@
-<template>
-
+<template> 
     <Navbar></Navbar>
     <div class="grid sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 pb-10">
         <p class="font-inter text-4xl text-navy font-semibold mb-6">Carrito de compras</p>
@@ -13,7 +12,7 @@
             <p>Subtotal: ${{ cartItems.reduce((total, item) => total + item.price, 0) }}</p>
             <p>IVA: ${{ cartItems.reduce((total, item) => total + item.price, 0) * 0.16}}</p>
             <p class="text-dark-pink font-bold text-3xl">Total a pagar: ${{ cartItems.reduce((total, item) => total + item.price, 0) * 1.16}}</p>
-            <button class="cursor-pointer bg-neon-pink text-white rounded-lg py-2 px-4">Proceder al pago</button>
+            <button @click="goToOrderConfirmation" class="cursor-pointer bg-neon-pink text-white rounded-lg py-2 px-4">Proceder al pago</button>
         </span>
     </div>
 </template>
@@ -22,6 +21,9 @@
 import CartItem from '@/components/CartItem.vue';
 import Navbar from '@/components/Navbar.vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const cartItems = ref([
     { id: 1, name: "Artículo 1", imagen: "https://i.pinimg.com/736x/28/6b/1d/286b1dde6060431382820591c4127ead.jpg", price: 150, unitPrice: 150, level: "Nivel menudeo", quantity: 1 },
@@ -30,5 +32,13 @@ const cartItems = ref([
 
 const removeItem = (id) => {
     cartItems.value = cartItems.value.filter(item => item.id !== id);
+};
+
+
+const goToOrderConfirmation = () => {
+    router.push({
+        path: '/confirmacion-pago',
+        query: { cart: JSON.stringify(cartItems.value) } 
+    });
 };
 </script>

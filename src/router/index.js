@@ -18,6 +18,7 @@ import AdminView from '@/views/AdminView.vue'
 import NavbarAdmin from '@/components/NavbarAdmin.vue'
 import FAQ from '@/views/FAQ.vue'
 import Register from '@/components/Register.vue'
+import ConfirmacionPago from '@/views/OrderConfirmation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +89,11 @@ const router = createRouter({
       path : '/estatus-compra',
       name : 'estatus-compra',
       component : EstatusCompra
+    },
+    { 
+      path : '/confirmacion-pago',
+      name : 'confirmacion-pago',
+      component : ConfirmacionPago
     },
     {
       path: '/subir-diseno',
