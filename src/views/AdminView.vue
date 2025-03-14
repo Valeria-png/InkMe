@@ -1,5 +1,5 @@
 <template>
-    <NavbarAdmin />
+    <Navbar></Navbar>
     <div class="max-w-4xl mx-auto p-6">
         <h2 class="text-4xl font-bagel-fat-one mb-4 text-center text-navy">Gestión de Usuarios</h2>
       
@@ -39,10 +39,10 @@
   </template>
   
   <script>
-  import NavbarAdmin from '@/components/NavbarAdmin.vue';
+  import Navbar from '@/components/Navbar.vue';
   export default {
     components: {
-      NavbarAdmin
+      Navbar
     },
     data() {
       return {
