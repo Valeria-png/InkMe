@@ -24,7 +24,9 @@
 import CartItem from '@/components/CartItem.vue';
 import Navbar from '@/components/Navbar.vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/userStore';
 
+const userStore = useUserStore();
 const router = useRouter();
 import { ref, computed, onMounted } from 'vue';
 
@@ -40,7 +42,7 @@ const cartItems = ref([]);
 
 const fetchCartData = async () => {
     try {
-        const cartResponse = await fetch('https://inkmeapi.onrender.com/api/cart/67c4938c11baeba60b9619f8');
+        const cartResponse = await fetch(`https://inkmeapi.onrender.com/api/cart/${userStore.id}`);
         const cartData = await cartResponse.json();
 
         const productsResponse = await fetch('https://inkmeapi.onrender.com/api/products');
