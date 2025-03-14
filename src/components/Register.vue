@@ -14,7 +14,7 @@
           <label class="block text-sm text-dark-pink">Nombre de usuario</label>
           <input 
             type="text" 
-            v-model="username" 
+            v-model="name" 
             class="w-full p-1 mt-1 border bg-white rounded-lg focus:ring outline-neon-pink"
             required
           >
@@ -58,12 +58,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const username = ref('');
+const name = ref('');
 const email = ref('');
 const password = ref('');
 
 const register = async () => {
-  console.log('Registrando usuario:', username.value, email.value, password.value);
+  console.log('Registrando usuario:', name.value, email.value, password.value);
 
   try {
     // Hacer la solicitud POST al backend para registrar al usuario
@@ -73,7 +73,7 @@ const register = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: username.value,
+        name: name.value,
         email: email.value,
         password: password.value,
       }),

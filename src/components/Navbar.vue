@@ -74,21 +74,21 @@
             </div>
 
             <!-- Dropdown de Usuario -->
-            <div class="relative dropdown">
-                <h3 class="font-inter">Usuario</h3>
-                <div class="dropdown-content text-white p-2 font-inter bg-navy rounded-xl">
-                    <p @click="router.push('/subir-diseno')">Subir Diseño</p>
-                    <p @click="router.push('/mis-disenos')">Mis Diseños</p>
-                    <p @click="router.push('/mis-pedidos')">Mis Pedidos</p>
-                    <p @click="router.push('/carrito')">Mi Carrito</p>
-                    <p @click="router.push('/login')">Iniciar sesión</p>
-                </div>
-            </div>
+             <div v-if="!userStore.loggedIn">
+               <div class="relative dropdown">
+                   <h3 class="font-inter">Usuario</h3>
+                   <div class="dropdown-content text-white p-2 font-inter bg-navy rounded-xl">
+                       <p @click="router.push('/subir-diseno')">Subir Diseño</p>
+                       <p @click="router.push('/mis-disenos')">Mis Diseños</p>
+                       <p @click="router.push('/mis-pedidos')">Mis Pedidos</p>
+                       <p @click="router.push('/carrito')">Mi Carrito</p>
+                       <p @click="router.push('/login')">Iniciar sesión</p>
+                   </div>
+               </div>
+             </div>
 
       <!-- Si no está logueado -->
-      <div v-else>
-        <button @click="router.push('/login')" class="font-inter">Iniciar sesión</button>
-      </div>
+      
 
       <button
         class="md:hidden block rounded-xl p-2 bg-navy text-white"
