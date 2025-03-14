@@ -13,9 +13,9 @@ const emits = defineEmits(['chosen-design'])
 const designs = ref([])
 const selectedDesignId = ref(null)
 async function  getDesigns(){
-    const response = await fetch ("https://inkmeapi.onrender.com/api/designs")
-    const data = await response.json()
-    designs.value = data.filter(design => design.user_id === userStore.id)
+    const response = await fetch (`https://inkmeapi.onrender.com/api/designs/user/${userStore.id}`)
+    designs.value = await response.json()
+
 }
 onMounted(() => {
     getDesigns()

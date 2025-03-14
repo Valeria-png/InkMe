@@ -76,6 +76,7 @@ function previewImage(event){
 
 const subirDiseno = async () => {
   const formData = new FormData();
+  console.log(userStore.id)
   formData.append('user_id',userStore.id)
   
   formData.append('file',archivo.value)
