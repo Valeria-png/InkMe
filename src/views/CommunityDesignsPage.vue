@@ -16,8 +16,8 @@
         <div class=" px-4 w-3/4">
             <h1 class="font-inter text-3xl text-navy font-semibold px-7" >Diseños de la comunidad</h1>
             <section class="flex flex-wrap gap-10 py-4  justify-center"> 
-                <ArticuloCard v-if="isFiltered===false" v-for="producto in allDesignedProducts" :key="producto._id" :design="producto.design_id" :product="producto.product_id"  ></ArticuloCard>
-                <ArticuloCard v-else  v-for="productoFiltrado in filteredDesignedProducts" :key="productoFiltrado._id" :design="productoFiltrado.design_id" :product="productoFiltrado.product_id"  ></ArticuloCard>
+                <ArticuloCard v-if="isFiltered===false" v-for="producto in allDesignedProducts" :key="producto._id" :designedProductId="producto" :design="producto.design_id" :product="producto.product_id"  ></ArticuloCard>
+                <ArticuloCard v-else  v-for="productoFiltrado in filteredDesignedProducts" :key="productoFiltrado._id" :designedProductId="productoFiltrado" :design="productoFiltrado.design_id" :product="productoFiltrado.product_id"  ></ArticuloCard>
             </section>
         </div>    
     </div>
