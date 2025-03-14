@@ -1,18 +1,20 @@
 <template>
-
-    <Navbar></Navbar>
+    <Navbar />
     <div class="grid sm:grid-cols-1 gap-4 xl:px-48 lg:px-36 md:px-24 sm:px-12 pb-10">
         <p class="font-inter text-4xl text-navy font-semibold mb-6">Carrito de compras</p>
         <CartItem 
             v-for="item in cartItems" 
-            :key="item.id" 
+            :key="item._id" 
             :item="item" 
+            @update="updateItem"
             @remove="removeItem"
         />
         <span class="flex flex-col gap-3 items-center mt-4 text-navy font-inter text-2xl font-semibold">
-            <p>Subtotal: ${{ cartItems.reduce((total, item) => total + item.price, 0) }}</p>
-            <p>IVA: ${{ cartItems.reduce((total, item) => total + item.price, 0) * 0.16}}</p>
-            <p class="text-dark-pink font-bold text-3xl">Total a pagar: ${{ cartItems.reduce((total, item) => total + item.price, 0) * 1.16}}</p>
+            <p>Subtotal: ${{ subtotal }}</p>
+            <p>IVA: ${{ (subtotal * 0.16).toFixed(2) }}</p>
+            <p class="text-dark-pink font-bold text-3xl">
+                Total a pagar: ${{ (subtotal * 1.16).toFixed(2) }}
+            </p>
             <button class="cursor-pointer bg-neon-pink text-white rounded-lg py-2 px-4">Proceder al pago</button>
         </span>
     </div>
@@ -21,14 +23,102 @@
 <script setup>
 import CartItem from '@/components/CartItem.vue';
 import Navbar from '@/components/Navbar.vue';
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-const cartItems = ref([
-    { id: 1, name: "Artículo 1", imagen: "https://i.pinimg.com/736x/28/6b/1d/286b1dde6060431382820591c4127ead.jpg", price: 150, unitPrice: 150, level: "Nivel menudeo", quantity: 1 },
-    { id: 2, name: "Artículo 2", imagen: "https://i.pinimg.com/736x/ac/f8/e6/acf8e66d1d36591458fea6bab7728041.jpg", price: 300, unitPrice: 100, level: "Nivel menudeo", quantity: 3 }
-]);
+const cartItems = ref([]);
 
-const removeItem = (id) => {
-    cartItems.value = cartItems.value.filter(item => item.id !== id);
+const fetchCartData = async () => {
+    try {
+        const cartResponse = await fetch('https://inkmeapi.onrender.com/api/cart/67c4938c11baeba60b9619f8');
+        const cartData = await cartResponse.json();
+
+        const productsResponse = await fetch('https://inkmeapi.onrender.com/api/products');
+        const productsData = await productsResponse.json();
+
+        const designsResponse = await fetch('https://inkmeapi.onrender.com/api/designs');
+        const designsData = await designsResponse.json();
+
+        cartItems.value = cartData.items.map(item => {
+            const design = designsData.find(d => d._id === item.designedproduct_id.design_id);
+            const product = productsData.find(p => p._id === item.designedproduct_id.product_id); // Get product data
+
+            // Use the correct price level based on the quantity
+            const unitPrice = getUnitPrice(item.amount, product);
+
+            return {
+                _id: item._id,
+                cartId: cartData._id,
+                designedproduct_id: item.designedproduct_id._id,
+                name: design ? design.name : 'Producto sin diseño',
+                imagen: design && design.file ? design.file : 'https://via.placeholder.com/150',
+                price: item.amount * unitPrice,
+                unitPrice: unitPrice,
+                level: getLevel(item.amount),
+                quantity: item.amount,
+                product: product // Store product reference
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
+    }
 };
+
+
+// Get unit price based on quantity and product's price tiers
+const getUnitPrice = (quantity, product) => {
+    if (!product) return 0; // If no product found, return 0
+
+    if (quantity < 51) return product.lvl1_price;
+    if (quantity < 201) return product.lvl2_price;
+    return product.lvl3_price;
+};
+
+const getLevel = (quantity) => {
+    if (quantity < 51) return 'Nivel menudeo';
+    if (quantity < 201) return 'Nivel mayoreo 1';
+    return 'Nivel mayoreo 2';
+};
+
+const updateItem = async (updatedItem) => {
+    try {
+        const response = await fetch(`https://inkmeapi.onrender.com/api/cart/${updatedItem.cartId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                items: [{ designedproduct_id: updatedItem.designedproduct_id, amount: updatedItem.quantity }]
+            })
+        });
+
+        if (!response.ok) throw new Error("Failed to update cart");
+
+        // Find and update the corresponding item
+        const index = cartItems.value.findIndex(i => i._id === updatedItem._id);
+        if (index !== -1) {
+            const item = cartItems.value[index];
+            item.quantity = updatedItem.quantity;
+            item.unitPrice = getUnitPrice(updatedItem.quantity, item.product); // Use stored product data
+            item.price = updatedItem.quantity * item.unitPrice;
+            item.level = getLevel(updatedItem.quantity);
+        }
+    } catch (error) {
+        console.error("Error updating cart:", error);
+    }
+};
+
+
+
+const removeItem = async (designedProductId, cartId) => {
+    try {
+        await fetch(`https://inkmeapi.onrender.com/api/cart/${cartId}/item/${designedProductId}`, { method: "DELETE" });
+        cartItems.value = cartItems.value.filter(item => item.designedproduct_id !== designedProductId);
+    } catch (error) {
+        console.error("Error deleting item:", error);
+    }
+};
+
+
+
+const subtotal = computed(() => cartItems.value.reduce((total, item) => total + item.price, 0));
+
+onMounted(fetchCartData);
 </script>
