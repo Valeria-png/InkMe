@@ -1,53 +1,8 @@
 <template>
-<<<<<<< HEAD
-    <div class="flex items-center font-inter justify-center min-h-screen bg-color-light-pink">
-      <div class="bg-light-pink p-8 rounded-lg shadow-lg w-96">
-        <div class="flex justify-center mb-4">
-          <img @click="router.push('/')" src="../assets/inkme logo.png" alt="logo" class="h-16 cursor-pointer">
-        </div>
-        
-        <h2 class="text-center text-2xl font-bold text-dark-pink mb-4">
-          Inicio de Sesión
-        </h2>
-
-        <form @submit.prevent="login">
-          <div class="mb-4">
-            <label class="block text-sm text-dark-pink">Correo o Nombre de usuario</label>
-            <input 
-              type="text" 
-              v-model="email" 
-              class="w-full p-1 mt-1 border bg-white rounded-lg focus:ring outline-neon-pink"
-              required
-            >
-          </div>
-  
-          <div class="mb-4">
-            <label class="block text-sm text-dark-pink">Contraseña</label>
-            <input 
-              type="password" 
-              v-model="password" 
-              class="w-full bg-white p-1 mt-1 border rounded-lg outline-neon-pink"
-              required
-            >
-          </div>
-            <p class="text-sm text-navy text-center mb-4">
-            ¿No tienes cuenta aún? 
-            <a href="#" class="text-neon-pink font-semibold hover:underline" @click="router.push('/register')">Regístrate</a>
-          </p>
-
-          <button class="w-full cursor-pointer text-white text-lg hover:scale-105 bg-neon-pink hover:bg-dark-pink p-2 rounded-lg font-semibold transition" >
-           Iniciar Sesión
-          </button>
-        </form>
-
-      </div>
-    </div>
-=======
   <div class="flex items-center font-inter justify-center min-h-screen bg-color-light-pink">
     <div class="bg-light-pink p-8 rounded-lg shadow-lg w-96">
       <div class="flex justify-center mb-4">
         <img @click="router.push('/')" src="../assets/inkme logo.png" alt="logo" class="h-16 cursor-pointer">
->>>>>>> front-jesus
       </div>
       
       <h2 class="text-center text-2xl font-bold text-dark-pink mb-4">
@@ -74,15 +29,18 @@
             required
           >
         </div>
+        
         <p class="text-sm text-navy text-center mb-4">
           ¿No tienes cuenta aún? 
-          <a href="#" class="text-neon-pink font-semibold hover:underline">Regístrate</a>
+          <a href="#" class="text-neon-pink font-semibold hover:underline" @click="router.push('/register')">Regístrate</a>
         </p>
 
         <button class="w-full cursor-pointer text-white text-lg hover:scale-105 bg-neon-pink hover:bg-dark-pink p-2 rounded-lg font-semibold transition">
           Iniciar Sesión
         </button>
       </form>
+
+      <p v-if="errorMessage" class="text-red-500 text-center mt-4">{{ errorMessage }}</p>
     </div>
   </div>
 </template>
@@ -90,50 +48,58 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
 
 const router = useRouter();
 const email = ref('');
 const password = ref('');
+const errorMessage = ref('');
+
+const authStore = useAuthStore();
 
 const login = async () => {
-  console.log('Iniciando sesión con:', email.value, password.value);
-  
+  errorMessage.value = '';
+
   try {
-    // Realiza la solicitud POST al backend para iniciar sesión
     const response = await fetch('https://inkmeapi.onrender.com/api/users/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value, password: password.value }),
     });
 
-    // Procesa el token
     if (!response.ok) {
-      throw new Error('Error en las credenciales');
+      throw new Error('Credenciales incorrectas o usuario no encontrado');
     }
 
     const data = await response.json();
+    if (!data.token) {
+      throw new Error('Error al recibir el token');
+    }
+
     localStorage.setItem('token', data.token);
 
-    // Decodifica el token para obtener el rol del usuario
-    const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
-    const userRole = decodedToken.type_rol;
-
-    // Verifica el rol del usuario
-    if (userRole === 'admin') {
-      router.push('/admin'); // Redirigir a la vista de admin
-    } else if (userRole === 'user') {
-      router.push('/'); // Redirigir a la vista de cliente
-    } else {
-      console.error('Rol desconocido:', userRole);
+    let decodedToken;
+    try {
+      decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+      console.log('Token decodificado:', decodedToken); // Depuración
+    } catch (error) {
+      throw new Error('Token inválido');
     }
+
+    if (!decodedToken.name || !decodedToken.type_rol) {
+      throw new Error('Datos del usuario incompletos en el token');
+    }
+
+    authStore.login({
+      name: decodedToken.name,
+      type_rol: decodedToken.type_rol
+    });
+
+    router.push(decodedToken.type_rol === 'admin' ? '/admin' : '/');
 
   } catch (error) {
     console.error('Error de inicio de sesión:', error.message);
+    errorMessage.value = error.message;
   }
 };
 </script>
