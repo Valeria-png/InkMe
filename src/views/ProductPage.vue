@@ -13,7 +13,7 @@
 
         <div class="flex w-full md:w-auto justify-center  flex-row  py-4 md:py-0 md:flex-col gap-6 px-8">
             <div class="relative w-full">
-                <button popoverTarget="popoverFileInput" type="" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
+                <button popoverTarget="popoverFileInput" type="" :disabled="isTextOrDesign===true" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-10 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                     </svg>
@@ -27,12 +27,12 @@
                         <div class="flex gap-2 justify-center w-full">
                             <div class=" flex flex-col gap-4 items-center justify-center">
                                 <h4 class="font-semibold text-2xl text-dark-violet">Selecciona o arrastra un Archivo</h4>
-                                <input id="fileInput" @change="previewFile" type="file" accept="image/png, image/jpeg, image/jpg, application/pdf">
+                                <input  @change="previewFile" type="file" accept="image/png, image/jpeg, image/jpg, application/pdf">
                                 <p class="text-dark-pink">Formatos aceptados: .jpg, .jpeg, .png, .pdf</p>                        
                             </div>
                             <img id="preview" src="" class="w-50 h-50 object-contain rounded-lg hidden" alt="">                        
                         </div>
-                        <button @click="uploadFile" class="bg-navy hidden place-self-center text-white rounded-xl w-1/2 font-inter  hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Subir Archivo</button>
+                        <button @click="uploadFile" id="fileInputBtn" class="bg-navy hidden place-self-center text-white rounded-xl w-1/2 font-inter  hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Subir Archivo</button>
                         
 
                     </div>
@@ -41,7 +41,7 @@
                             <input @change="$event.target.checked ? aceptoPublicar = true : aceptoPublicar = false" type="checkbox" name="" id="aceptoPublicar">                        
                             <label for="aceptoPublicar">Quiero publicar el diseño que escoja en el presente producto para su venta en la plataforma de InkMe</label>
                         </div>
-                        <smDesignItem @chosen-design="updateDesignId"></smDesignItem>
+                        <smDesignItem @chosen-design="(payload) => { updateDesignId(payload); isTextOrDesign = false; }"></smDesignItem>
                         <button @click="addDesignToProduct" class="bg-neon-pink place-self-center text-white rounded-xl w-1/2 font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Seleccionar</button>
                     </div>
                 </div>                           
@@ -49,7 +49,7 @@
 
 
             <div class="relative w-full">
-                <button popovertarget="popoverTextInput" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
+                <button popovertarget="popoverTextInput" :disabled="isTextOrDesign===false" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-10 ">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
@@ -128,7 +128,7 @@ console.log(designId.value)
 const canvas = ref(null)
 const textDesignId = ref(null)
 const uploadedDesign = ref(null)
-const isTextOrDesign = ref(false)
+const isTextOrDesign = ref(null)
 
 const wrapText = (ctx, text, maxWidth) => {
   const words = text.split(' ');
@@ -236,7 +236,7 @@ const updateDesignId = (chosenDesignId) => {
 };
 //add whenever the design wants to be public
 const addDesignToProduct= async () =>{
-    console.log(aceptoPublicar.value)
+    console.log(designId.value)
     try{
         const response = await fetch("https://inkmeapi.onrender.com/api/designedProducts",
         {
@@ -252,6 +252,7 @@ const addDesignToProduct= async () =>{
             })
         })
         const data = await response.json() 
+        
         alert('Diseño guardado con éxito')
     }
     catch(err){
@@ -262,27 +263,29 @@ const addDesignToProduct= async () =>{
     
 }
 async function uploadText(){
-    const formData = new FormData()
-    formData.append("file", imageBlob.value);
-    formData.append("user_id", "67ca0e6f906eeb5d8426ac6a");
-    formData.append("text", null);
-    formData.append("text_color", null);
-    formData.append("added_value", null);
-    formData.append("name", "prueba Texto3");
-    formData.append("description", null);
+    const formData2 = new FormData()
+    formData2.append("file", imageBlob.value);
+    formData2.append("user_id", "67ca0e6f906eeb5d8426ac6a");
+    formData2.append("text", null);
+    formData2.append("text_color", null);
+    formData2.append("added_value", 0);
+    formData2.append("name", "prueba Texto3");
+    formData2.append("description", null);
     try{
         const response = await fetch('https://inkmeapi.onrender.com/api/designs',{
         method: 'POST',
-        body:formData
+        body:formData2
     })
         const data = await response.json()
         textDesignId.value = data._id
-        alert("Diseño subido con éxito")
+        //si es true se esta subiendo un texto
     }
     catch(err){
         alert("Error al subir el diseño")
     }
-
+    isTextOrDesign.value = true
+    updateDesignId(textDesignId.value)
+    addDesignToProduct()
   
 
 
@@ -291,7 +294,7 @@ function previewFile(event){
   preview.src=URL.createObjectURL(event.target.files[0])
   uploadedDesign.value=event.target.files[0]
   preview.classList.remove('hidden')
-  fileInput.classList.remove('hidden')
+  fileInputBtn.classList.remove('hidden')
 
 }
 
@@ -310,12 +313,15 @@ const uploadFile = async () => {
         body:formData
     })
         const data = await response.json()
-        textDesignId.value = data._id
-        alert("Diseño subido con éxito")
+        updateDesignId(data._id)
     }
     catch(err){
         alert("Error al subir el diseño")
     }
+    isTextOrDesign.value = false
+    //si es true, se sube un diseño de texto
+    addDesignToProduct()
+    
 }
 
 
