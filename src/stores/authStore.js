@@ -14,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Actualizar el userStore
     userStore.setUser({
       loggedIn: true,
+      id: userData.id,
       userName: userData.name,
       typeRol: userData.type_rol
     });
@@ -36,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
       // Actualizar el userStore
       userStore.setUser({
         loggedIn: true,
+        id: userData.id,
         userName: userData.name,
         typeRol: userData.type_rol
       });
