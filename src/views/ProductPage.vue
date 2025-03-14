@@ -11,49 +11,60 @@
             </svg>
         </div>
 
-        <div class="flex  flex-row md:flex-col gap-6 px-8">
-            <div class="relative ">
-                <button popoverTarget="popoverFileInput" type="" class="bg-light-pink text-dark-violet rounded-lg flex justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
+        <div class="flex w-full md:w-auto justify-center  flex-row  py-4 md:py-0 md:flex-col gap-6 px-8">
+            <div class="relative w-full">
+                <button popoverTarget="popoverFileInput" type="" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-10 ">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                     </svg>
                 </button> 
-                <div class="bg-light-pink w-1/2 h-1/2 rounded-xl absolute inset-1/2 -translate-x-1/2 -translate-y-1/2  " id="popoverFileInput" popover>
+                <div class="bg-light-pink w-[90%] h-[70%] md:w-1/2 md:h-2/3 rounded-xl absolute inset-1/2 -translate-x-1/2 -translate-y-1/2  " id="popoverFileInput" popover>
                     <div class="flex w-full items-center py-5 font-inter font-semibold text-dark-violet ">
                         <div  @click="tabIsActive = true" :class="{'tab' : true, 'border-b-[2px] w-1/2' : tabIsActive === false, 'w-1/2' :tabIsActive === true}">Subir un Diseño Nuevo</div>
                         <div @click="tabIsActive = false" :class="{'tab' : true, 'border-b-[2px] w-1/2' : tabIsActive === true, 'w-1/2' :tabIsActive === false }">Escoge uno de tus diseños</div>
                     </div>
-                    <div class="flex flex-col gap-4 items-center justify-center font-inter overflow-auto h-60 rounded-b-2xl p-4" v-if="tabIsActive === true">
-                        <h4 class="font-semibold text-2xl text-dark-violet">Selecciona o arrastra un Archivo</h4>
-                        <input type="file">
-                        <p class="text-dark-pink">Formatos aceptados: .jpg, .jpeg, .png, .pdf</p>
+                    <div class="flex gap-2 flex-col justify-center font-inter overflow-auto h-60 rounded-b-2xl p-4" v-if="tabIsActive === true">
+                        <div class="flex gap-2 justify-center w-full">
+                            <div class=" flex flex-col gap-4 items-center justify-center">
+                                <h4 class="font-semibold text-2xl text-dark-violet">Selecciona o arrastra un Archivo</h4>
+                                <input id="fileInput" @change="previewFile" type="file" accept="image/png, image/jpeg, image/jpg, application/pdf">
+                                <p class="text-dark-pink">Formatos aceptados: .jpg, .jpeg, .png, .pdf</p>                        
+                            </div>
+                            <img id="preview" src="" class="w-50 h-50 object-contain rounded-lg hidden" alt="">                        
+                        </div>
+                        <button @click="uploadFile" class="bg-navy hidden place-self-center text-white rounded-xl w-1/2 font-inter  hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Subir Archivo</button>
+                        
 
                     </div>
-                    <div v-if="tabIsActive === false" class="rounded-b-2xl flex flex-col h-60 bg-magenta  overflow-y-auto">
-                        <DesignItem/>
-                        <DesignItem/>
-                        <DesignItem/>
-                        <DesignItem/>
+                    <div v-if="tabIsActive === false" class="rounded-b-2xl flex flex-col h-87 bg-magenta  overflow-y-auto">
+                        <div class="flex gap-2 text-navy px-4">
+                            <input @change="$event.target.checked ? aceptoPublicar = true : aceptoPublicar = false" type="checkbox" name="" id="aceptoPublicar">                        
+                            <label for="aceptoPublicar">Quiero publicar el diseño que escoja en el presente producto para su venta en la plataforma de InkMe</label>
+                        </div>
+                        <smDesignItem @chosen-design="updateDesignId"></smDesignItem>
+                        <button @click="addDesignToProduct" class="bg-neon-pink place-self-center text-white rounded-xl w-1/2 font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Seleccionar</button>
                     </div>
                 </div>                           
             </div>
 
 
-            <div class="relative">
-                <button popovertarget="popoverTextInput" class="bg-light-pink text-dark-violet rounded-lg flex justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
+            <div class="relative w-full">
+                <button popovertarget="popoverTextInput" class="bg-light-pink text-dark-violet rounded-lg flex place-self-center justify-center items-center p-2 size-20 hover:bg-dark-violet hover:text-light-pink hover:scale-105 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-10 ">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
                 </button>
-                <div popover id="popoverTextInput" class="bg-light-pink w-3/8  gap-2 absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 font-inter rounded-xl">
+                <div popover id="popoverTextInput" class="bg-light-pink h-2/3 w-[90%] md:w-3/8   gap-2 absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 font-inter rounded-xl">
                     <div class="flex flex-col items-center gap-2 p-6">
                         <h3 class="font-semibold text-2xl text-dark-violet text-center">Personaliza el Artículo con texto</h3>
                         <label class="" for="colorSelector">Selecciona el color del texto</label>
-                        <input type="color"  id="colorSelector" class="rounded-lg w-1/4 h-15">
+                        <input v-model="textColor" type="color"  id="colorSelector" class="rounded-lg w-1/4 h-15">
                         <label class="place-self-start" for="textInput">Añade texto</label>
-                        <input type="text" id="textInput" class="outline-neon-pink bg-white rounded-xl h-10 p-2 w-full" placeholder="Escribe algo">
+                        <input v-model="text" type="text" id="textInput" class="outline-neon-pink bg-white rounded-xl h-10 p-2 w-full" placeholder="Escribe algo">
+                        <canvas ref="canvas" :class="{'w-[300px]' : true, 'h-[300px]' : true, 'hidden' : imageBlob === null} "></canvas>
                         <p class="text-sm place-self-start text-dark-pink">El texto se aplicará con la tipografía Inter en tamaño de 48px</p>
-                        <button class="bg-neon-pink text-white rounded-xl p-2 hover:scale-105 w-full">Guardar Texto</button>                    
+                        <button  @click="generateImage" class="cursor-pointer bg-neon-pink text-white rounded-xl p-2 hover:scale-105 w-full">Generar Diseño</button>
+                        <button @click="uploadText" v-if="imageBlob !== null"  class="cursor-pointer bg-navy text-white rounded-xl p-2 hover:scale-105 w-full">Guardar Texto</button>                    
                     </div>
 
                 </div>
@@ -89,7 +100,7 @@
         <h2 class="text-navy font-inter text-2xl font-semibold">También te puede gustar</h2>
         <hr>
         <div class="flex gap-6 flex-nowrap overflow-auto w-full">
-            <ProductCard v-for="i in 8" :key="i"></ProductCard>
+            <ProductCard v-for="product in productsInCategory" :key="product._id" :id="product._id" :category="product.category" :productName="product.name" :price="product.lvl1_price" :img="product.file"></ProductCard>
         </div>
     </section>
     <Footer></Footer>
@@ -100,11 +111,99 @@ import Navbar from '../components/Navbar.vue';
 import Footer from '../components/Footer.vue';
 import ProductCard from '@/components/BaseProductCard.vue';
 import DesignItem from '@/components/DesignItem.vue';
+import smDesignItem from '@/components/smDesignItem.vue';
 import { ref,watch,onMounted } from 'vue';
 
-
+const aceptoPublicar = ref(false)
+const productsInCategory = ref([])
 const product = ref({})
 const price = ref(0)
+const category = ref('')
+const designId = ref('')
+const text = ref('')
+const textColor = ref("#000000")
+const imageBlob = ref(null)
+console.log(designId.value)
+
+const canvas = ref(null)
+const textDesignId = ref(null)
+const uploadedDesign = ref(null)
+const isTextOrDesign = ref(false)
+
+const wrapText = (ctx, text, maxWidth) => {
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = words[0];
+
+  for (let i = 1; i < words.length; i++) {
+    const word = words[i];
+    const width = ctx.measureText(currentLine + ' ' + word).width;
+    
+    if (width < maxWidth) {
+      currentLine += ' ' + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  
+  // Push the last line
+  lines.push(currentLine);
+  return lines;
+};
+
+const generateImage = async () => {
+
+  try {
+    // Get the canvas context
+    const ctx = canvas.value.getContext('2d');
+    
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    
+    // Set a white background
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
+    
+    // Set text properties
+    ctx.fillStyle = textColor.value;
+    ctx.font = '24px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Draw the text in the center of the canvas
+    const maxWidth = canvas.value.width * 0.8;
+    
+    // Get wrapped lines
+    const lines = wrapText(ctx, text.value, maxWidth);
+    
+    // Calculate starting Y position
+    // If there's only one line, center it. Otherwise, start above center and work down
+    const lineHeight = 22; // A bit more than font size to add spacing between lines
+    let startY = canvas.value.height / 2 - ((lines.length - 1) * lineHeight) / 2;
+    
+    // Draw each line of text
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.value.width / 2, startY + index * lineHeight);
+    });
+    
+    
+    // Convert the canvas to a blob
+    imageBlob.value = await new Promise(resolve => {
+      canvas.value.toBlob(resolve, 'image/png');
+    });
+    
+
+    
+  } catch (error) {
+    console.error(error);
+  } 
+};
+    
+
+    
+
+
 const props = defineProps({
     id: String})
 
@@ -114,13 +213,110 @@ async function getProduct(){
     const data = await response.json()
     product.value = data
     price.value = data.lvl1_price
+    category.value = product.value.category
+    console.log(category.value)
+}
+
+
+async function getProductsInCategory(){
+    const response = await fetch(`https://inkmeapi.onrender.com/api/products`)
+    const data = await response.json()
+    console.log(data)
+    productsInCategory.value = data.filter(product => product.category === category.value)
+    console.log(productsInCategory.value)
 }
 onMounted(() => {
     getProduct()
-    
-    console.log(price)
+    getProductsInCategory()
 })
 
+const updateDesignId = (chosenDesignId) => {
+  designId.value = chosenDesignId;
+
+};
+//add whenever the design wants to be public
+const addDesignToProduct= async () =>{
+    console.log(aceptoPublicar.value)
+    try{
+        const response = await fetch("https://inkmeapi.onrender.com/api/designedProducts",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                product_id: product.value._id,
+                design_id: designId.value,
+                isPublic : aceptoPublicar.value
+                
+            })
+        })
+        const data = await response.json() 
+        alert('Diseño guardado con éxito')
+    }
+    catch(err){
+        alert('Problema al subir el diseño')
+    }
+    
+
+    
+}
+async function uploadText(){
+    const formData = new FormData()
+    formData.append("file", imageBlob.value);
+    formData.append("user_id", "67ca0e6f906eeb5d8426ac6a");
+    formData.append("text", null);
+    formData.append("text_color", null);
+    formData.append("added_value", null);
+    formData.append("name", "prueba Texto3");
+    formData.append("description", null);
+    try{
+        const response = await fetch('https://inkmeapi.onrender.com/api/designs',{
+        method: 'POST',
+        body:formData
+    })
+        const data = await response.json()
+        textDesignId.value = data._id
+        alert("Diseño subido con éxito")
+    }
+    catch(err){
+        alert("Error al subir el diseño")
+    }
+
+  
+
+
+}
+function previewFile(event){
+  preview.src=URL.createObjectURL(event.target.files[0])
+  uploadedDesign.value=event.target.files[0]
+  preview.classList.remove('hidden')
+  fileInput.classList.remove('hidden')
+
+}
+
+const uploadFile = async () => {
+  const formData = new FormData();
+  formData.append("file", uploadedDesign.value);
+  formData.append("user_id", "67ca0e6f906eeb5d8426ac6a");
+  formData.append("text", null);
+  formData.append("text_color", null);
+  formData.append("added_value", 0);
+  formData.append("description", null);
+  formData.append("name", "67ca0e6f906eeb5d8426ac6aDesign1");
+  try{
+        const response = await fetch('https://inkmeapi.onrender.com/api/designs',{
+        method: 'POST',
+        body:formData
+    })
+        const data = await response.json()
+        textDesignId.value = data._id
+        alert("Diseño subido con éxito")
+    }
+    catch(err){
+        alert("Error al subir el diseño")
+    }
+}
 
 
 const tabIsActive = ref(true)
