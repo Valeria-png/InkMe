@@ -39,6 +39,7 @@
           <template v-else-if="userStore.typeRol === 'admin'">
             <p @click="router.push('/moderar-contenido')">Moderación de contenido</p>
             <p @click="router.push('/product-status')">Control de pedidos</p>
+            <p @click="router.push('/subir-diseno')">Subir Diseño</p>
             <p @click="router.push('/admin')">Gestión de usuarios</p>
           </template>
           <p @click="logout">Cerrar sesión</p>
