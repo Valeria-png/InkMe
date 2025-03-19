@@ -42,7 +42,6 @@
                             <label for="aceptoPublicar">Quiero publicar el diseño que escoja en el presente producto para su venta en la plataforma de InkMe</label>
                         </div>
                         <smDesignItem @chosen-design="(payload) => { updateDesignId(payload); isTextOrDesign = false; }"></smDesignItem>
-                        <button @click="addDesignToProduct" class="bg-neon-pink place-self-center text-white rounded-xl w-1/2 font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Seleccionar</button>
                     </div>
                 </div>                           
             </div>
@@ -92,7 +91,9 @@
                         <button @click="incrementQuantity" class=" text-white ps-1 pe-3 border-0 text-2xl pb-1 font-bold cursor-pointer ">+</button>
                     </div>
                 </div>
-                <button class="bg-neon-pink text-white rounded-3xl font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-4 text-xl">Comprar Ahora</button>
+                <button @click="handleBuyNow" class="bg-neon-pink text-white rounded-3xl font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-4 text-xl">
+    Comprar Ahora
+</button>
             </div>
         </div>
     </main>
@@ -237,11 +238,10 @@ const updateDesignId = (chosenDesignId) => {
 
 };
 //add whenever the design wants to be public
-const addDesignToProduct= async () =>{
-    console.log(designId.value)
-    try{
-        const response = await fetch("https://inkmeapi.onrender.com/api/designedProducts",
-        {
+const addDesignToProduct = async () => {
+    console.log(designId.value);
+    try {
+        const response = await fetch("https://inkmeapi.onrender.com/api/designedProducts", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -249,21 +249,61 @@ const addDesignToProduct= async () =>{
             body: JSON.stringify({
                 product_id: product.value._id,
                 design_id: designId.value,
-                isPublic : aceptoPublicar.value
-                
+                isPublic: aceptoPublicar.value
             })
-        })
-        const data = await response.json() 
-        
-        alert('Diseño guardado con éxito')
-    }
-    catch(err){
-        alert('Problema al subir el diseño')
-    }
-    
+        });
 
-    
-}
+        const data = await response.json();
+        if (data && data._id) {
+            alert("Diseño guardado con éxito");
+            return data._id; // Return the newly created designedProduct ID
+        } else {
+            throw new Error("Failed to create designedProduct");
+        }
+    } catch (err) {
+        alert("Problema al subir el diseño");
+        return null;
+    }
+};
+
+const addToCart = async (designedProductId) => {
+    console.log("Producto: ", designedProductId);
+    console.log("Usuario: ", userStore.id);
+    console.log("Cantidad: ", quantity.value);
+    try {
+        // Assuming cartId is stored in the user store or fetched dynamically
+        const response = await fetch(`https://inkmeapi.onrender.com/api/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: userStore.id,
+                items: [
+                    {
+                        designedproduct_id: designedProductId,
+                        amount: quantity.value
+                    }
+                ],
+            })
+        });
+
+        if (!response.ok) throw new Error("Failed to add to cart");
+        
+        alert("Producto agregado al carrito");
+    } catch (err) {
+        alert("Error al agregar al carrito");
+    }
+};
+
+const handleBuyNow = async () => {
+    const designedProductId = await addDesignToProduct(); // Create the designed product
+    if (designedProductId) {
+        await addToCart(designedProductId); // Add it to the cart
+    }
+};
+
+
 async function uploadText(){
     const formData2 = new FormData()
     formData2.append("file", imageBlob.value);
@@ -321,9 +361,8 @@ const uploadFile = async () => {
         alert("Error al subir el diseño")
     }
     isTextOrDesign.value = false
-    //si es true, se sube un diseño de texto
-    addDesignToProduct()
-    
+    alert("Diseño guardado con éxito")
+    //si es true, se sube un diseño de texto    
 }
 
 
