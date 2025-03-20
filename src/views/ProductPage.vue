@@ -238,7 +238,8 @@ const updateDesignId = (chosenDesignId) => {
 };
 //add whenever the design wants to be public
 const addDesignToProduct= async () =>{
-    console.log(designId.value)
+    console.log(aceptoPublicar.value)
+
     try{
         const response = await fetch("https://inkmeapi.onrender.com/api/designedProducts",
         {
@@ -254,6 +255,7 @@ const addDesignToProduct= async () =>{
             })
         })
         const data = await response.json() 
+        console.log(data)
         
         alert('Diseño guardado con éxito')
     }
