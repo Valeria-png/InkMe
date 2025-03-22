@@ -40,14 +40,47 @@ import { useUserStore } from "../stores/userStore";
 const userStore = useUserStore();
 const router = useRouter();
 import { ref, computed, onMounted } from "vue";
+const goToOrderConfirmation = async () => {
+  try {
+    const order = {
+      user_id: userStore.id,
+      status: "pending",
+      items: cartItems.value.map((item) => ({
+        product_id: item.product._id, // producto base
+        designedproduct_id: item.designedproduct_id,
+        amount: item.quantity,
+      })),
+      total: subtotal.value,
+    };
 
-const goToOrderConfirmation = () => {
-  clearCart();
-  router.push({
-    path: "/confirmacion-pago",
-    query: { cart: JSON.stringify(cartItems.value) },
-  });
+    console.log("Orden a enviar:", order);
+
+    const response = await fetch("https://inkmeapi.onrender.com/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al crear la orden");
+    }
+
+    const orderData = await response.json();
+    console.log("Orden creada:", orderData);
+
+    await clearCart();
+
+    // 🔽 Cambia aquí: Pasamos la orden completa como query (con JSON.stringify)
+    router.push({
+      path: "/confirmacion-pago",
+      query: { order: JSON.stringify(orderData) },
+    });
+  } catch (error) {
+    console.error("Error procesando la orden:", error);
+  }
 };
+
+
 const cartItems = ref([]);
 
 const fetchCartData = async () => {
