@@ -17,9 +17,9 @@
                     v-model="searchQuery"
                     type="text"
                     class="outline-none w-full"
-                    placeholder="Buscar diseños y artículos"
+                    placeholder="Buscar diseños"
                 />
-                <button @click="goToNoResults">
+                <button @click="goToNoResults" class="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
@@ -74,9 +74,9 @@
             v-model="searchQuery"
             type="text"
             class="outline-none w-full text-white"
-            placeholder="Buscar diseños y artículos"
+            placeholder="Buscar diseños"
         />
-        <button @click="goToNoResults" class="text-white">
+        <button @click="goToNoResults" class="text-white cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6 hover:scale-110 transition">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
@@ -89,13 +89,16 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore'; // Importar el store de Pinia
-
-
+import { useSearchResultsStore } from '@/stores/searchResults';
+const searchResultsStore = useSearchResultsStore();
 
 const router = useRouter()
 const isMobileSearchActive = ref(false);
 const userStore = useUserStore(); // Obtener el store de usuario
 const searchQuery = ref('');
+
+
+
 
 const logout = () => {
   userStore.logOut(); // Llamar al método de logout del store
@@ -103,6 +106,7 @@ const logout = () => {
 };
 // Redirige siempre a la página de resultados no encontrados
 const goToNoResults = () => {
+    searchResultsStore.searchQuery = searchQuery.value;
     router.push('/resultados');
 }
 </script>
