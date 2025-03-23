@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="flex items-center p-4 border rounded-xl shadow-sm cursor-pointer"
+    class="flex items-center font-inter p-4 border rounded-xl shadow-sm cursor-pointer"
     @click="goToOrderDetails"
   >
     <div class="relative w-20 h-20 bg-gray-300 rounded-lg">
@@ -14,7 +14,7 @@
       <p class="text-gray-600">{{ order.items }} Artículos</p>
       <button 
         @click.stop="goToOrderDetails"
-        class="bg-pink-200 text-neon-pink px-2 py-1 rounded-md text-sm"
+        class="bg-light-pink text-neon-pink px-2 py-1 rounded-md text-sm cursor-pointer"
       >
         Ver detalles
       </button>

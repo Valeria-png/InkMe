@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center w-full">
+  <div class="flex items-center w-full font-inter">
     <div class="relative flex w-full items-center">
       <!-- Línea de progreso corregida -->
       <div class="absolute left-0 w-full border-t-2 border-gray-300 transform -translate-y-3"></div>
@@ -18,7 +18,7 @@
           </svg>
         </div>
         <!-- Etiqueta -->
-        <span class="mt-2 text-sm font-medium text-gray-700">{{ step }}</span>
+        <span class="mt-2 text-sm font-medium text-navy">{{ step }}</span>
       </div>
     </div>
   </div>

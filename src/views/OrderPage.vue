@@ -5,7 +5,7 @@
     <ProgressBar :steps="steps" :currentStep="currentStep" />
 
     <div class="max-w-6xl mx-auto p-6">
-      <h1 class="text-3xl text-center text-navy font-bold mb-8">Detalles de la orden</h1>
+      <h1 class="text-3xl text-center font-inter text-navy font-bold mb-8">Detalles de la orden</h1>
 
       <div v-for="(product, index) in productDetails" :key="index" class="product-card shadow-lg border-2 border-neon-pink bg-light-pink rounded-xl mb-6 p-6">
         <div class="flex flex-col items-center gap-4">
@@ -19,10 +19,9 @@
           </div>
 
           <!-- Detalles del diseño -->
-          <div v-if="product.design_id" class="text-center text-dark-violet">
+          <div v-if="product.design_id" class="text-center text-dark-pink">
             <p><strong>Descripción:</strong> {{ product.design_id.description }}</p>
             <p><strong>Valor Añadido:</strong> ${{ product.design_id.added_value }}</p>
-            <p v-if="product.design_id.text_color"><strong>Color del texto:</strong> {{ product.design_id.text_color }}</p>
           </div>
         </div>
       </div>
@@ -138,9 +137,7 @@ const handleAction = (product) => {
   object-fit: contain; /* Mantener la proporción de la imagen */
 }
 
-.text-dark-violet {
-  color: #4B0082;
-}
+
 
 .bg-light-pink {
   background-color: #f6e0e8;
@@ -162,7 +159,6 @@ button:hover {
 h1 {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #2A3A8C;
   margin-bottom: 3rem;
 }
 
