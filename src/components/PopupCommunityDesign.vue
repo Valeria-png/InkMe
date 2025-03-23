@@ -36,7 +36,7 @@
 
                     <div class="flex flex-col gap-3 md:gap-6">
                         <p class="text-navy font-inter text-wrap">{{ props.product.description }} Con diseño de {{ props.design.name }}. Descripción de diseño: {{ props.design.description }}</p>
-                        <button class="bg-neon-pink w-full sm:w-2/3 md:w-full rounded-xl text-lg md:text-xl place-self-center p-2 text-white text-semibold cursor-pointer font-inter hover:scale-105 transition hover:bg-dark-pink">Comprar Ahora</button>
+                        <button @click="addToCart" class="bg-neon-pink w-full sm:w-2/3 md:w-full rounded-xl text-lg md:text-xl place-self-center p-2 text-white text-semibold cursor-pointer font-inter hover:scale-105 transition hover:bg-dark-pink">Comprar Ahora</button>
                     </div>
                 </div>
             </div>
@@ -45,95 +45,89 @@
 </template>
 
 <script setup>
-    import { ref,watch } from 'vue';
-    const props = defineProps({
-        product: Object,
-        design: Object,
-        creator: String,
-        // Cambiar para que sea un fetch después
-    })
-    const emit = defineEmits(['closePopup'])
-    const price = ref(props.product.lvl1_price+props.design.added_value) 
-    const levels = [
-        { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
-        { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
-        { label: "Mayoreo 2 201+ pzas.", min: 201, max: 499 }
-    ];
+import { ref, watch } from 'vue';
+import { useUserStore } from '@/stores/userStore';
 
-    const selectedLevel = ref(levels[0]);
-    const quantity = ref(selectedLevel.value.min);
+const userStore = useUserStore();
+const emit = defineEmits(['closePopup']);
 
-    watch(selectedLevel, (newLevel) => {
-        if (quantity.value === newLevel.max) {
-            quantity.value = newLevel.max;
-        }
-        else{
-            quantity.value = newLevel.min
-        }
-    })
+const props = defineProps({
+    product: Object,
+    design: Object,
+    creator: String,
+    designedProductId: Object
+});
 
-      watch (quantity, (newQuantity) => {
-        if (newQuantity >= 1 && newQuantity <= 50) {
-            selectedLevel.value = levels[0];
-            price.value = props.product.lvl1_price+props.design.added_value
-        } else if (newQuantity >= 51 && newQuantity <= 200) {
-            selectedLevel.value = levels[1];
-            price.value = props.product.lvl2_price+props.design.added_value
-        } else if (newQuantity >= 201) {
-            selectedLevel.value = levels[2];
-            price.value = props.product.lvl3_price+props.design.added_value
-        }
-        //hasta aqui está bien
-    })
+const price = ref(props.product.lvl1_price + props.design.added_value);
+const levels = [
+    { label: "Menudeo   1-50 pzas.", min: 1, max: 50 },
+    { label: "Mayoreo 1 51-200 pzas.", min: 51, max: 200 },
+    { label: "Mayoreo 2 201+ pzas.", min: 201, max: 499 }
+];
 
-    function incrementQuantity (){
-        quantity.value++;
+const selectedLevel = ref(levels[0]);
+const quantity = ref(selectedLevel.value.min);
+const userId = userStore.id; // Replace this with `cartId` if needed
+const designId = props.designedProductId._id; // Ensure this is correctly passed
 
+
+console.log("Diseño:", props.design);
+console.log("Producto COn Diseño:", props.designedProductId);
+
+watch(selectedLevel, (newLevel) => {
+    quantity.value = newLevel.min;
+});
+
+watch(quantity, (newQuantity) => {
+    if (newQuantity >= 1 && newQuantity <= 50) {
+        selectedLevel.value = levels[0];
+        price.value = props.product.lvl1_price + props.design.added_value;
+    } else if (newQuantity >= 51 && newQuantity <= 200) {
+        selectedLevel.value = levels[1];
+        price.value = props.product.lvl2_price + props.design.added_value;
+    } else if (newQuantity >= 201) {
+        selectedLevel.value = levels[2];
+        price.value = props.product.lvl3_price + props.design.added_value;
     }
-    function decrementQuantity(){
-        if(quantity.value === 1) return
+});
+
+const incrementQuantity = () => {
+    quantity.value++;
+};
+const decrementQuantity = () => {
+    if (quantity.value > 1) {
         quantity.value--;
     }
+};
 
+const addToCart = async () => {
+    try {
+        const response = await fetch("https://inkmeapi.onrender.com/api/cart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: userId, // Replace with `cartId` if required
+                items: [
+                    {
+                        designedproduct_id: designId,
+                        amount: quantity.value,
+                    },
+                ],
+            }),
+        });
 
-    watch (quantity, (newQuantity) => {
-        if (newQuantity >= 1 && newQuantity <= 50) {
-            selectedLevel.value = levels[0];
-        } else if (newQuantity >= 51 && newQuantity <= 200) {
-            selectedLevel.value = levels[1];
-        } else if (newQuantity >= 201) {
-            selectedLevel.value = levels[2];
+        if (!response.ok) {
+            throw new Error("Failed to add item to cart");
         }
-    })
 
-    // function incrementQuantity (){
-    //     quantity.value++;
-    //     if (quantity.value >= 1 && quantity.value <= 50) {
-    //         selectedLevel.value = levels[0];
-    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
-    //         selectedLevel.value = levels[1];
-    //     } else if (quantity.value >= 201) {
-    //         selectedLevel.value = levels[2];
-
-    //     }
-    // }
-    // function decrementQuantity(){
-    //     if(quantity.value === 1) return
-    //     quantity.value--;
-    //     val = quantity.value
-    //     if (quantity.value >= 1 && quantity.value <= 50) {
-    //         selectedLevel.value = levels[0];
-    //         quantity.value = val
-    //     } else if (quantity.value >= 51 && quantity.value <= 200) {
-    //         selectedLevel.value = levels[1];
-    //         quantity.value = val
-    //     } else if (quantity.value >= 201) {
-    //         selectedLevel.value = levels[2];
-    //         quantity.value = val
-    //     }
-    // }
-    // console.log(quantity.value);
-
+        console.log("Item added to cart successfully!");
+        alert("Producto agregado al carrito exitosamente!");
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+    }
+};
 </script>
 
 <style scoped>

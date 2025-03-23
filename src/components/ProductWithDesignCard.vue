@@ -17,7 +17,7 @@
       </div>
     </div>
     <div v-if="isSelected" class="relative">
-      <PopupCommunityDesign :design="props.design" :product="props.product" :creator="creatorName"  @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
+      <PopupCommunityDesign :design="props.design" :designedProductId="props.designedProductId" :product="props.product" :creator="creatorName"  @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
     </div>
   </template>
 
