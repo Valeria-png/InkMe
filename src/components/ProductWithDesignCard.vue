@@ -1,90 +1,93 @@
 <template>
-    <div class="min-w-2xs max-w-2xs rounded-xl overflow-hidden shadow-md bg-white">
-      <div class="h-57 bg-gray-100 flex items-center justify-center relative">
-        <img :src="props.design.file" alt="" class="w-full h-full object-cover">
-        <button @click="addToCart" class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus hover:text-navy" viewBox="0 0 16 16">
-            <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
-            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-          </svg>
+  <div class="min-w-2xs max-w-2xs rounded-xl overflow-hidden shadow-md bg-white">
+    <div class="h-57 bg-gray-100 flex items-center justify-center relative">
+      <img v-if="props.design && props.design.file" :src="props.design.file" alt="" class="w-full h-full object-cover">
+      <p v-else class="text-gray-500">No image available</p>
 
-        </button>
-      </div>
-      <div class="bg-[#FCDEE4] h-45 px-5 py-3">
-        <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">${{ price }}</p>
-        <h3 @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer">{{ props.product.name }} de {{ props.design.name }}</h3>
-        <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">{{ creatorName }}</p>
-      </div>
+      <button @click="addToCart" class="absolute top-2 right-2 text-[#FF204E] cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-plus hover:text-navy" viewBox="0 0 16 16">
+          <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
+          <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+        </svg>
+      </button>
     </div>
-    <div v-if="isSelected" class="relative">
-      <PopupCommunityDesign :design="props.design" :designedProductId="props.designedProductId" :product="props.product" :creator="creatorName"  @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
+    <div class="bg-[#FCDEE4] h-45 px-5 py-3">
+      <p class="text-[#FF204E] font-bold font-bagel-fat-one text-xl">${{ price }}</p>
+      <h3 v-if="props.design && props.product" @click="isSelected = !isSelected" class="text-[#A0153E] font-semibold font-inter text-wrap text-dark-violet text-lg cursor-pointer">
+        {{ props.product.name }} de {{ props.design.name }}
+      </h3>
+      <p class="text-[#FF204E] pt-2 text-dark-pink text-sm font-inter">{{ creatorName }}</p>
     </div>
-  </template>
+  </div>
 
-  <script setup>
-  import { ref,onMounted,computed } from 'vue';
+  <div v-if="isSelected" class="relative">
+    <PopupCommunityDesign :design="props.design" :designedProductId="props.designedProductId" :product="props.product" :creator="creatorName"  @close-popup="isSelected = false" class="fixed inset-0"></PopupCommunityDesign>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue';
 import PopupCommunityDesign from './PopupCommunityDesign.vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
-const creatorName = ref('')
-const price = ref()
+const creatorName = ref('');
+const price = ref();
+const isSelected = ref(false);
 
-const isSelected = ref(false)
-  const props = defineProps({
-    design: Object,
-    product: Object,
-    designedProductId: Object
+const props = defineProps({
+design: Object,
+product: Object,
+designedProductId: Object
+});
 
-  })
-  const designId = props.designedProductId._id;
-  const userId = userStore.id;
+const designId = computed(() => props.designedProductId?._id);
+const userId = userStore.id;
 
+const addToCart = async () => {
+try {
+  const response = await fetch("https://inkmeapi.onrender.com/api/cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id: userId, // Use cartId instead of userId if needed
+      items: [
+        {
+          designedproduct_id: designId.value, // Ensure designId is properly retrieved
+          amount: 1,
+        },
+      ],
+    }),
+  });
 
-
-  const addToCart = async () => {
-  try {
-    const response = await fetch("https://inkmeapi.onrender.com/api/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: userId, // Use cartId instead of userId if needed
-        items: [
-          {
-            designedproduct_id: designId, // Use designId instead of designedProductId
-            amount: 1, // Default to 1, you can allow users to choose
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to add item to cart");
-    }
-
-    console.log("Item added to cart successfully!");
-  } catch (error) {
-    console.error("Error adding to cart:", error);
+  if (!response.ok) {
+    throw new Error("Failed to add item to cart");
   }
+
+  console.log("Item added to cart successfully!");
+} catch (error) {
+  console.error("Error adding to cart:", error);
+}
 };
 
-
-
-
-
-  async function getCreator(){
+async function getCreator() {
+if (props.design && props.design.user_id) {
+  try {
     const response = await fetch(`https://inkmeapi.onrender.com/api/users/${props.design.user_id}`);
     const data = await response.json();
-    creatorName.value = data.name
+    creatorName.value = data.name;
+  } catch (error) {
+    console.error("Error fetching creator:", error);
   }
+}
+}
 
-  onMounted(() => {
-    getCreator()
-    price.value =  props.product.lvl1_price + props.design.added_value;
-
-  })
-
-  </script>
-  
+onMounted(() => {
+getCreator();
+if (props.product && props.design) {
+  price.value = props.product.lvl1_price + props.design.added_value;
+}
+});
+</script>
