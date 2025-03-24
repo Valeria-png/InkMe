@@ -46,7 +46,7 @@ const goToOrderConfirmation = async () => {
       user_id: userStore.id,
       status: "pending",
       items: cartItems.value.map((item) => ({
-        product_id: item.product._id, // producto base
+        product_id: item.product._id,
         designedproduct_id: item.designedproduct_id,
         amount: item.quantity,
       })),
@@ -68,17 +68,29 @@ const goToOrderConfirmation = async () => {
     const orderData = await response.json();
     console.log("Orden creada:", orderData);
 
+    const productsToSend = cartItems.value.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      cartId: item.cartId,
+    }));
+
     await clearCart();
 
-    // 🔽 Cambia aquí: Pasamos la orden completa como query (con JSON.stringify)
+    // 🚀 Aquí mandamos total CON IVA
     router.push({
       path: "/confirmacion-pago",
-      query: { order: JSON.stringify(orderData) },
+      query: {
+        products: JSON.stringify(productsToSend),
+        total: (subtotal.value * 1.16).toFixed(2), // 🔥 ESTA LÍNEA CAMBIA
+      },
     });
   } catch (error) {
     console.error("Error procesando la orden:", error);
   }
 };
+
+  
 
 
 const cartItems = ref([]);

@@ -27,6 +27,19 @@
 import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
+//obtener el total del pedido
+async function fetchOrderDetails() {
+  try {
+    const response = await fetch(`https://inkmeapi.onrender.com/api/orders/${props.order.id}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al obtener los detalles del pedido:', error);
+    return null;
+  }
+  
+}
+
 const props = defineProps({
   order: Object
 });

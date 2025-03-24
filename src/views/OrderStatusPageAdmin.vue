@@ -30,9 +30,9 @@
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6" v-if="currentOrder && currentOrder._id">
         <div class="bg-white p-6 rounded-2xl shadow flex flex-col gap-4">
           <div>
-            <p class="text-gray-600">Cliente: {{ currentOrder.user_id.name || 'N/A' }}</p>
-            <p class="text-gray-600">Correo: {{ currentOrder.user_id.email || 'N/A' }}</p>
-            <p class="text-gray-600">ID Orden: {{ currentOrder._id  || 'N/A' }}</p>
+            <p class="text-gray-600">Cliente: {{ currentOrder.user_id?.name || 'N/A' }}</p>
+            <p class="text-gray-600">Correo: {{ currentOrder.user_id?.email || 'N/A' }}</p>
+            <p class="text-gray-600">ID Orden: {{ currentOrder._id || 'N/A' }}</p>
             <p class="text-gray-600">Fecha: {{ new Date(currentOrder.date).toLocaleDateString('es-MX') }}</p>
             <p class="text-gray-600">Total: ${{ currentOrder.total }}</p>
             <p class="text-gray-600">Estado: 
@@ -124,9 +124,10 @@ const currentOrder = ref({});
 const currentStep = ref(0); // Estado de la barra de progreso
 const manualStatus = ref('');
 
-const steps = ['Impres', 'Control calidad', 'Empaquetado', 'Enviado', 'Entregado'];
+// Pasos de la barra de progreso
+const steps = ['Impresión', 'Control calidad', 'Empaquetado', 'Enviado', 'Entregado'];
 
-// Mapeo del status a pasos
+// Mapeo del estado a pasos
 const statusMap = {
   Pedido: 1,
   Pagado: 2,
@@ -147,23 +148,23 @@ const updateOrderStatus = async (stepName) => {
   let newStatus = '';
 
   switch (stepName) {
-  case 'openFile':
-    currentStep.value = 1;
-    newStatus = 'Pagado';
-    break;
-  case 'approveQuality':
-    currentStep.value = 2;
-    newStatus = 'Enviado';
-    break;
-  case 'printReceipt':
-    currentStep.value = 3;
-    newStatus = 'En ruta';
-    break;
-  case 'printLabel':
-    currentStep.value = 4;
-    newStatus = 'Entregado';
-    break;
-}
+    case 'openFile':
+      currentStep.value = 1;
+      newStatus = 'Pagado';
+      break;
+    case 'approveQuality':
+      currentStep.value = 2;
+      newStatus = 'Enviado';
+      break;
+    case 'printReceipt':
+      currentStep.value = 3;
+      newStatus = 'En ruta';
+      break;
+    case 'printLabel':
+      currentStep.value = 4;
+      newStatus = 'Entregado';
+      break;
+  }
 
   await saveOrderStatus(newStatus);
 };

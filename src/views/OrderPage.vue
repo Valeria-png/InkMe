@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div>
     <Navbar />
 
@@ -10,8 +10,10 @@
       <div v-for="(product, index) in productDetails" :key="index" class="product-card shadow-lg border-2 border-neon-pink bg-light-pink rounded-xl mb-6 p-6">
         <div class="flex flex-col items-center gap-4">
           
-          <!-- Nombre del diseño -->
-          <p class="text-2xl text-dark-violet font-semibold text-center">{{ product.design_id?.name }}</p>
+          <!-- Nombre del diseño o producto -->
+          <p class="text-2xl text-dark-violet font-semibold text-center">
+            {{ product.design_id?.name || product.product_id || 'Producto sin nombre' }}
+          </p>
 
           <!-- Imagen del diseño -->
           <div v-if="product.design_id?.file" class="image-container mb-4">
@@ -19,9 +21,21 @@
           </div>
 
           <!-- Detalles del diseño -->
-          <div v-if="product.design_id" class="text-center text-dark-pink">
-            <p><strong>Descripción:</strong> {{ product.design_id.description }}</p>
-            <p><strong>Valor Añadido:</strong> ${{ product.design_id.added_value }}</p>
+          <div class="text-center text-dark-pink">
+            <p><strong>Descripción:</strong> {{ product.design_id?.description || 'No disponible' }}</p>
+            <p><strong>Valor Añadido:</strong> ${{ parseFloat(product.design_id?.added_value) || 0 }}</p>
+            <p><strong>Cantidad:</strong> {{ product.amount  || 1 }}</p>
+
+            <!-- Categoría según cantidad -->
+            <p v-if="product.amount <= 50" class="text-xs text-gray-600">
+              <strong>Menudeo:</strong> 1-50 pzas
+            </p>
+            <p v-else-if="product.amount <= 200" class="text-xs text-gray-600">
+              <strong>Mayoreo 1:</strong> 51-200 pzas
+            </p>
+            <p v-else class="text-xs text-gray-600">
+              <strong>Mayoreo 2:</strong> 201+ pzas
+            </p>
           </div>
         </div>
       </div>
@@ -50,66 +64,77 @@ const order = ref(null);
 const productDetails = ref([]);
 
 const steps = ['Pedido', 'Pagado', 'Enviado', 'En ruta', 'Entregado'];
-
 const currentStep = ref(0);
 
 // Calcular el total del pedido
 const totalAmount = computed(() => {
   return productDetails.value.reduce((total, product) => {
-    // Asegúrate de que `added_value` esté definido y sea un número
-    const addedValue = parseFloat(product.design_id?.added_value) || 0;
-    return total + addedValue;
+    const pricePerUnit = parseFloat(product.design_id?.added_value) || 0;
+    const quantity = product.amount || 1;
+    return total + pricePerUnit * quantity;
   }, 0);
 });
+
+// Función para agrupar los productos por ID y sumar sus cantidades
+const groupProductsById = (items) => {
+  const grouped = {};
+
+  items.forEach(item => {
+    const id = item.designedproduct_id?._id || item.product_id;
+    if (grouped[id]) {
+      grouped[id].quantity += item.quantity || 1; // Sumar cantidades
+    } else {
+      grouped[id] = { ...item, quantity: item.quantity || 1 };
+    }
+  });
+
+  return Object.values(grouped);
+};
 
 async function fetchOrderDetails() {
   try {
     const response = await fetch(`https://inkmeapi.onrender.com/api/orders/${route.params.id}`);
-    order.value = await response.json();
+    const orderData = await response.json();
+    order.value = orderData;
 
     // ACTUALIZAR currentStep BASADO EN EL STATUS
-    const status = order.value.status; // Aquí está el estado actual de la orden
+    const status = order.value.status;
     const statusSteps = ['Pedido', 'Pagado', 'Enviado', 'En ruta', 'Entregado'];
-
-    // Buscar el índice del estado actual y actualizar currentStep
     const stepIndex = statusSteps.findIndex(step => step.toLowerCase() === status.toLowerCase());
     currentStep.value = stepIndex !== -1 ? stepIndex : 0;
 
-    // Luego cargar los productos normalmente
-    const productPromises = order.value.items.map(async (item, index) => {
+    // Agrupar productos y traer detalles
+    const productPromises = order.value.items.map(async (item) => {
       const designedProductId = (typeof item.designedproduct_id === 'object' && item.designedproduct_id !== null) 
         ? item.designedproduct_id._id 
         : item.designedproduct_id;
 
-      if (!designedProductId) {
-        return { name: 'Producto no disponible', price: 'N/A', image: '' };
+      let designData = null;
+
+      if (designedProductId) {
+        const resDesignedProduct = await fetch(`https://inkmeapi.onrender.com/api/designedproducts/${designedProductId}`);
+        designData = await resDesignedProduct.json();
       }
 
-      const resDesignedProduct = await fetch(`https://inkmeapi.onrender.com/api/designedproducts/${designedProductId}`);
-      const product = await resDesignedProduct.json();
-      return product;
+      return {
+        ...item, 
+        design_id: designData?.design_id || null // Guardamos solo el design_id
+      };
     });
 
-    productDetails.value = await Promise.all(productPromises);
+    const detailedProducts = await Promise.all(productPromises);
+    productDetails.value = groupProductsById(detailedProducts); // Agrupar productos por id
+
   } catch (error) {
     console.error('Error cargando el pedido:', error);
   }
 }
 
-
-
 onMounted(fetchOrderDetails);
-
-const handleAction = (product) => {
-  console.log('Mostrando más detalles para el producto:', product);
-  // Aquí puedes realizar la acción que necesites
-};
-
-
 </script>
 
 <style scoped>
-/* Estilos para la tarjeta de producto */
+/* Tus estilos actuales los dejamos igual */
 .product-card {
   background-color: #f6e0e8;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -126,7 +151,7 @@ const handleAction = (product) => {
 
 .image-container {
   width: 100%;
-  max-width: 300px; /* Ajusta el tamaño máximo de la imagen */
+  max-width: 300px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -134,10 +159,8 @@ const handleAction = (product) => {
 .product-image {
   width: 100%;
   height: auto;
-  object-fit: contain; /* Mantener la proporción de la imagen */
+  object-fit: contain;
 }
-
-
 
 .bg-light-pink {
   background-color: #f6e0e8;
@@ -162,7 +185,6 @@ h1 {
   margin-bottom: 3rem;
 }
 
-/* Estilo para el total */
 .order-total {
   background-color: #f6e0e8;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
