@@ -40,6 +40,11 @@ import { useUserStore } from "../stores/userStore";
 const userStore = useUserStore();
 const router = useRouter();
 import { ref, computed, onMounted } from "vue";
+
+const total = computed(() => {
+  return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+});
+
 const goToOrderConfirmation = async () => {
   try {
     const order = {
@@ -50,10 +55,8 @@ const goToOrderConfirmation = async () => {
         designedproduct_id: item.designedproduct_id,
         amount: item.quantity,
       })),
-      total: subtotal.value,
+      total: total.value,
     };
-
-    console.log("Orden a enviar:", order);
 
     const response = await fetch("https://inkmeapi.onrender.com/api/orders", {
       method: "POST",
@@ -61,28 +64,28 @@ const goToOrderConfirmation = async () => {
       body: JSON.stringify(order),
     });
 
-    if (!response.ok) {
-      throw new Error("Error al crear la orden");
-    }
+    if (!response.ok) throw new Error("Error al crear la orden");
 
     const orderData = await response.json();
-    console.log("Orden creada:", orderData);
 
+    // Preparar productos para enviar al confirmar
     const productsToSend = cartItems.value.map((item) => ({
       name: item.name,
       quantity: item.quantity,
-      price: item.price,
-      cartId: item.cartId,
+      unitPrice: item.unitPrice, // Aquí precio unitario correcto
+      totalPrice: item.price, // Total de ese producto
     }));
 
     await clearCart();
 
-    // 🚀 Aquí mandamos total CON IVA
+    // 🚀 Redirección con todos los datos necesarios
     router.push({
-      path: "/confirmacion-pago",
+      path: `/confirmacion-pago/${orderData._id}`, // Pasa ID por params
       query: {
         products: JSON.stringify(productsToSend),
-        total: (subtotal.value * 1.16).toFixed(2), // 🔥 ESTA LÍNEA CAMBIA
+        subtotal: subtotal.value.toFixed(2),
+        iva: (subtotal.value * 0.16).toFixed(2),
+        total: (subtotal.value * 1.16).toFixed(2),
       },
     });
   } catch (error) {
@@ -90,9 +93,8 @@ const goToOrderConfirmation = async () => {
   }
 };
 
+
   
-
-
 const cartItems = ref([]);
 
 const fetchCartData = async () => {

@@ -94,7 +94,7 @@ const router = createRouter({
       component : EstatusCompra
     },
     { 
-      path : '/confirmacion-pago',
+      path : '/confirmacion-pago/:id',
       name : 'confirmacion-pago',
       component : ConfirmacionPago
     },

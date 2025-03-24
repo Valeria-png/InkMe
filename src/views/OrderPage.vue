@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div>
     <Navbar />
 
@@ -24,7 +24,10 @@
           <div class="text-center text-dark-pink">
             <p><strong>Descripción:</strong> {{ product.design_id?.description || 'No disponible' }}</p>
             <p><strong>Valor Añadido:</strong> ${{ parseFloat(product.design_id?.added_value) || 0 }}</p>
-            <p><strong>Cantidad:</strong> {{ product.amount  || 1 }}</p>
+            <p><strong>Cantidad:</strong> {{ product.amount || 1 }}</p>
+
+            <!-- ✅ Aquí agregamos el total por producto -->
+            <p><strong>Total por producto:</strong> ${{ (parseFloat(product.design_id?.added_value || 0) * (product.amount || 1)).toFixed(2) }}</p>
 
             <!-- Categoría según cantidad -->
             <p v-if="product.amount <= 50" class="text-xs text-gray-600">
@@ -75,6 +78,7 @@ const totalAmount = computed(() => {
   }, 0);
 });
 
+
 // Función para agrupar los productos por ID y sumar sus cantidades
 const groupProductsById = (items) => {
   const grouped = {};
@@ -82,9 +86,9 @@ const groupProductsById = (items) => {
   items.forEach(item => {
     const id = item.designedproduct_id?._id || item.product_id;
     if (grouped[id]) {
-      grouped[id].quantity += item.quantity || 1; // Sumar cantidades
+      grouped[id].amount += item.amount || 1; // Sumar cantidades
     } else {
-      grouped[id] = { ...item, quantity: item.quantity || 1 };
+      grouped[id] = { ...item, amount: item.amount || 1 };
     }
   });
 
@@ -104,7 +108,7 @@ async function fetchOrderDetails() {
     currentStep.value = stepIndex !== -1 ? stepIndex : 0;
 
     // Agrupar productos y traer detalles
-    const productPromises = order.value.items.map(async (item) => {
+        const productPromises = order.value.items.map(async (item) => {
       const designedProductId = (typeof item.designedproduct_id === 'object' && item.designedproduct_id !== null) 
         ? item.designedproduct_id._id 
         : item.designedproduct_id;
@@ -117,10 +121,13 @@ async function fetchOrderDetails() {
       }
 
       return {
-        ...item, 
-        design_id: designData?.design_id || null // Guardamos solo el design_id
+        ...item,
+        design_id: designData?.design_id || null,
+        unit_price: item.unit_price, 
+        amount: item.amount 
       };
     });
+
 
     const detailedProducts = await Promise.all(productPromises);
     productDetails.value = groupProductsById(detailedProducts); // Agrupar productos por id
@@ -132,64 +139,3 @@ async function fetchOrderDetails() {
 
 onMounted(fetchOrderDetails);
 </script>
-
-<style scoped>
-/* Tus estilos actuales los dejamos igual */
-.product-card {
-  background-color: #f6e0e8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  padding: 1.5rem;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.product-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.image-container {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.product-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.bg-light-pink {
-  background-color: #f6e0e8;
-}
-
-.bg-neon-pink {
-  background-color: #f50057;
-}
-
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: #f50057;
-  transform: scale(1.05);
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 3rem;
-}
-
-.order-total {
-  background-color: #f6e0e8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-top: 2rem;
-}
-</style>

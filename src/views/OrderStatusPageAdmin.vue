@@ -84,6 +84,14 @@
             >
               🏷️ Imprimir Etiqueta de Envío
             </button>
+            <!-- Botón Finalizar Pedido -->
+            <button
+              @click="deleteOrder"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center gap-1"
+            >
+              ❌ Finalizar Pedido
+            </button>
+
           </div>
 
           <!-- Selector manual del estado -->
@@ -219,6 +227,32 @@ const getOrders = async () => {
     console.error('Error al obtener órdenes:', error);
   }
 };
+
+// Eliminar un pedido
+const deleteOrder = async () => {
+  try {
+    const response = await fetch(`https://inkmeapi.onrender.com/api/orders/${currentOrder.value._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      const deletedOrder = await response.json();
+      console.log('Pedido eliminado:', deletedOrder);
+
+      // Eliminar el pedido de la lista local
+      orders.value = orders.value.filter(order => order._id !== currentOrder.value._id);
+      currentOrder.value = {}; // Resetear el pedido actual
+    } else {
+      console.error('Error al eliminar el pedido');
+    }
+  } catch (error) {
+    console.error('Error al eliminar el pedido:', error);
+  }
+};
+
 
 onMounted(() => {
   getOrders();

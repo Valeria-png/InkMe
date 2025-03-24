@@ -11,13 +11,14 @@
     </p>
 
     <div class="mt-6 text-pink-900 font-semibold">
-      <p class="mb-2">Tu orden es:</p>
+      <p class="mb-2">Tu orden es: <strong>{{ orderId }}</strong></p> <!-- ID de la orden -->
       <div v-for="(product, index) in products" :key="index" class="flex flex-col gap-1 px-6 mb-4">
-        <span class="font-semibold">Producto {{ index + 1 }}: {{ product.name }}</span>
-        <span>Cantidad: {{ product.quantity }}</span>
-        <span>Precio por unidad: {{ formatCurrency(product.price / product.quantity) }}</span>
-        <span>Precio total: {{ formatCurrency(product.price) }}</span>
-      </div>
+  <span class="font-semibold">Producto {{ index + 1 }}: {{ product.name }}</span>
+  <span>Cantidad: {{ product.quantity }}</span>
+  <span>Precio por unidad: {{ formatCurrency(product.unitPrice) }}</span>
+  <span>Precio total: {{ formatCurrency(product.totalPrice) }}</span>
+</div>
+
     </div>
 
     <p class="mt-4 text-pink-900 font-medium">CLABE: {{ clabe }}</p>
@@ -25,26 +26,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 
 const products = ref([]);
-const clabe = ref('9480385932492928');
+const subtotal = ref(0);
+const iva = ref(0);
+const total = ref(0);
+const orderId = ref(route.params.id); // ID de la orden desde URL
+const clabe = ref("982938208912");
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(amount);
 };
 
 const goHome = () => {
-  router.push('/');
+  router.push("/");
 };
 
 onMounted(() => {
   if (route.query.products) {
     products.value = JSON.parse(route.query.products);
+    subtotal.value = route.query.subtotal;
+    iva.value = route.query.iva;
+    total.value = route.query.total;
   }
 });
 </script>

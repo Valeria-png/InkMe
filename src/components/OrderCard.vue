@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div 
     class="flex items-center font-inter p-4 border rounded-xl shadow-sm cursor-pointer"
     @click="goToOrderDetails"
@@ -19,7 +19,7 @@
         Ver detalles
       </button>
     </div>
-    <p class="ml-auto text-neon-pink font-bold text-lg">${{ order.total.toFixed(2) }}</p>
+    <p class="ml-auto text-neon-pink font-bold text-lg">{{ formatCurrency(order.total) }}</p> <!-- Aquí se hace el formateo -->
   </div>
 </template>
 
@@ -27,18 +27,10 @@
 import { defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
-//obtener el total del pedido
-async function fetchOrderDetails() {
-  try {
-    const response = await fetch(`https://inkmeapi.onrender.com/api/orders/${props.order.id}`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error al obtener los detalles del pedido:', error);
-    return null;
-  }
-  
-}
+// Formatear el total como moneda
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
+};
 
 const props = defineProps({
   order: Object
