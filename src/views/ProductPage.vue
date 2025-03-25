@@ -42,6 +42,7 @@
                             <label for="aceptoPublicar">Quiero publicar el diseño que escoja en el presente producto para su venta en la plataforma de InkMe</label>
                         </div>
                         <smDesignItem @chosen-design="(payload) => { updateDesignId(payload); isTextOrDesign = false; }"></smDesignItem>
+                        <button @click="addDesignToProduct" class="bg-neon-pink place-self-center text-white rounded-xl w-1/2 font-inter hover:bg-dark-pink hover:scale-105 transform duration-300 cursor-pointer p-1 text-lg">Seleccionar</button>
                     </div>
                 </div>                           
             </div>
