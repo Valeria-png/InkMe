@@ -36,65 +36,10 @@ import CartItem from "@/components/CartItem.vue";
 import Navbar from "@/components/Navbar.vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/userStore";
+import { ref, computed, onMounted } from "vue";
 
 const userStore = useUserStore();
 const router = useRouter();
-import { ref, computed, onMounted } from "vue";
-
-const total = computed(() => {
-  return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
-});
-
-const goToOrderConfirmation = async () => {
-  try {
-    const order = {
-      user_id: userStore.id,
-      status: "pending",
-      items: cartItems.value.map((item) => ({
-        product_id: item.product._id,
-        designedproduct_id: item.designedproduct_id,
-        amount: item.quantity,
-      })),
-      total: total.value,
-    };
-
-    const response = await fetch("https://inkmeapi.onrender.com/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order),
-    });
-
-    if (!response.ok) throw new Error("Error al crear la orden");
-
-    const orderData = await response.json();
-
-    // Preparar productos para enviar al confirmar
-    const productsToSend = cartItems.value.map((item) => ({
-      name: item.name,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice, // Aquí precio unitario correcto
-      totalPrice: item.price, // Total de ese producto
-    }));
-
-    await clearCart();
-
-    // 🚀 Redirección con todos los datos necesarios
-    router.push({
-      path: `/confirmacion-pago/${orderData._id}`, // Pasa ID por params
-      query: {
-        products: JSON.stringify(productsToSend),
-        subtotal: subtotal.value.toFixed(2),
-        iva: (subtotal.value * 0.16).toFixed(2),
-        total: (subtotal.value * 1.16).toFixed(2),
-      },
-    });
-  } catch (error) {
-    console.error("Error procesando la orden:", error);
-  }
-};
-
-
-  
 const cartItems = ref([]);
 
 const fetchCartData = async () => {
@@ -120,24 +65,23 @@ const fetchCartData = async () => {
       );
       const product = productsData.find(
         (p) => p._id === item.designedproduct_id.product_id
-      ); // Get product data
-      // Use the correct price level based on the quantity
+      );
+
       const unitPrice = getUnitPrice(item.amount, product);
+      const addedValue = design ? design.added_value : 0;
 
       return {
         _id: item._id,
         cartId: cartData._id,
         designedproduct_id: item.designedproduct_id._id,
-        name: design ? design.name : "Producto sin diseño",
-        imagen:
-          design && design.file
-            ? design.file
-            : "https://via.placeholder.com/150",
-        price: item.amount * unitPrice,
+        name: product && design ? `${product.name} + ${design.name}` : "Producto sin diseño",
+        imagen: design && design.file ? design.file : "https://via.placeholder.com/150",
         unitPrice: unitPrice,
+        added_value: addedValue,
+        price: item.amount * (unitPrice + addedValue),
         level: getLevel(item.amount),
         quantity: item.amount,
-        product: product, // Store product reference
+        product: product,
       };
     });
   } catch (error) {
@@ -145,10 +89,8 @@ const fetchCartData = async () => {
   }
 };
 
-// Get unit price based on quantity and product's price tiers
 const getUnitPrice = (quantity, product) => {
-  if (!product) return 0; // If no product found, return 0
-
+  if (!product) return 0;
   if (quantity < 51) return product.lvl1_price;
   if (quantity < 201) return product.lvl2_price;
   return product.lvl3_price;
@@ -180,13 +122,12 @@ const updateItem = async (updatedItem) => {
 
     if (!response.ok) throw new Error("Failed to update cart");
 
-    // Find and update the corresponding item
     const index = cartItems.value.findIndex((i) => i._id === updatedItem._id);
     if (index !== -1) {
       const item = cartItems.value[index];
       item.quantity = updatedItem.quantity;
-      item.unitPrice = getUnitPrice(updatedItem.quantity, item.product); // Use stored product data
-      item.price = updatedItem.quantity * item.unitPrice;
+      item.unitPrice = getUnitPrice(updatedItem.quantity, item.product);
+      item.price = updatedItem.quantity * (item.unitPrice + item.added_value);
       item.level = getLevel(updatedItem.quantity);
     }
   } catch (error) {
@@ -194,23 +135,14 @@ const updateItem = async (updatedItem) => {
   }
 };
 
-const removeItem = async (designedProductId, cartId) => {
-  try {
-    await fetch(
-      `https://inkmeapi.onrender.com/api/cart/${cartId}/item/${designedProductId}`,
-      { method: "DELETE" }
-    );
-    cartItems.value = cartItems.value.filter(
-      (item) => item.designedproduct_id !== designedProductId
-    );
-  } catch (error) {
-    console.error("Error deleting item:", error);
-  }
-};
+const subtotal = computed(() =>
+  cartItems.value.reduce((total, item) => total + (item.unitPrice + item.added_value) * item.quantity, 0)
+);
 
+// ✅ **Define clearCart to prevent error**
 const clearCart = async () => {
   try {
-    console.log(cartItems);
+    if (cartItems.value.length === 0) return;
     await fetch(
       `https://inkmeapi.onrender.com/api/cart/${cartItems.value[0].cartId}`,
       { method: "DELETE" }
@@ -221,9 +153,53 @@ const clearCart = async () => {
   }
 };
 
-const subtotal = computed(() =>
-  cartItems.value.reduce((total, item) => total + item.price, 0)
-);
+const goToOrderConfirmation = async () => {
+  try {
+    const order = {
+      user_id: userStore.id,
+      status: "pending",
+      items: cartItems.value.map((item) => ({
+        product_id: item.product._id,
+        designedproduct_id: item.designedproduct_id,
+        amount: item.quantity,
+      })),
+      total: (subtotal.value * 1.16).toFixed(2),
+    };
+
+    const response = await fetch("https://inkmeapi.onrender.com/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order),
+    });
+
+    if (!response.ok) throw new Error("Error al crear la orden");
+
+    const orderData = await response.json();
+
+    const productsToSend = cartItems.value.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      added_value: item.added_value,
+      totalPrice: item.price,
+    }));
+
+    await clearCart();
+
+    router.push({
+      path: `/confirmacion-pago/${orderData._id}`,
+      query: {
+        products: JSON.stringify(productsToSend),
+        subtotal: subtotal.value.toFixed(2),
+        iva: (subtotal.value * 0.16).toFixed(2),
+        total: (subtotal.value * 1.16).toFixed(2),
+      },
+    });
+  } catch (error) {
+    console.error("Error procesando la orden:", error);
+  }
+};
+
 
 onMounted(fetchCartData);
 </script>
