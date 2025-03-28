@@ -89,6 +89,21 @@ const fetchCartData = async () => {
   }
 };
 
+const removeItem = async (itemId) => {
+  try {
+    const response = await fetch(`https://inkmeapi.onrender.com/api/cart/${userStore.id}/${itemId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Error al eliminar el producto del carrito");
+
+    cartItems.value = cartItems.value.filter(item => item._id !== itemId);
+  } catch (error) {
+    console.error("Error eliminando el producto:", error);
+  }
+};
+
+
 const getUnitPrice = (quantity, product) => {
   if (!product) return 0;
   if (quantity < 51) return product.lvl1_price;
